@@ -1,3 +1,62 @@
-.MMM-Screen-Powersave-Notification {
-    font-size: 14px;
+.temperatureRootWrapper .module-content{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    font-size: 0px;
 }
+
+.temperatureRootWrapper .sensor {
+    justify-content: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: nowrap;
+    background-color: #2b2c30;
+    border-radius: 5px;
+    margin: 5px;
+    line-height: 0px;
+    font-size: 0px;
+}
+
+.temperatureRootWrapper .name, .temperatureRootWrapper .temperature, .temperatureRootWrapper .humidity {
+    margin: 5px;
+}
+
+.temperatureRootWrapper .nameWrapper, .temperatureRootWrapper .description, .temperatureRootWrapper .value, .temperatureRootWrapper .unit {
+    font-size: 20px;
+    line-height: 20px;
+}
+
+.temperatureRootWrapper .name {
+    text-align: center;
+}
+
+.temperatureRootWrapper .sensorWrapper {
+    font-size: 0px;
+    margin: 5px;
+    background-color: black;
+}
+
+.temperatureRootWrapper .temperatureWrapper, .temperatureRootWrapper .humidityWrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+}
+
+.temperatureRootWrapper .description {
+    margin-right: 10px;
+}
+
+.temperatureRootWrapper .valueWrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    align-items: flex-end;
+    flex-wrap: nowrap;
+}
+
+.temperatureRootWrapper .unit {
+    margin-left: 5px;
+}
+
