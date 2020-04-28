@@ -29,25 +29,25 @@ If you want to use script provided to read data of a HTU21 sensor you need to in
 If you use an HTU21 attached to the Pi and want to use the htu21 script to read the values of this sensor you can use this config.
 
 ```json5
-    	{
-			module: "MMM-Temperature",
-			position: "bottom_right",
-			config: {
-				sensors: [
+        {
+            module: "MMM-Temperature",
+	        position: "bottom_right",
+	        config: {
+		        sensors: [
                     {}
-				]
-			},
-		},
+                ]
+            },
+        },
 ```
 
 This is a more complex version which uses two sensors with names. The script of the second sensor is a different one.
 
 ```json5
-    	{
-			module: "MMM-Temperature",
-			position: "bottom_right",
-			config: {
-				sensors: [
+        {
+            module: "MMM-Temperature",
+            position: "bottom_right",
+            config: {
+			    sensors: [
                     {
                         name: "Sensor One"
                     },
@@ -56,9 +56,9 @@ This is a more complex version which uses two sensors with names. The script of 
                         script: "my_script",
                         args: "-i 4"
                     }
-				]
-			},
-		},
+                ]
+            },
+        },
 ```
 
 ### General ###
