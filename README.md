@@ -80,6 +80,32 @@ This is a more complex version which uses two sensors with names. The script of 
 | script | The script to call to get the values of the sensor. If not present the default script is used | false |
 | args | The arguments to pass to the script | false |
 
+## Beispiele ##
+### HTU21 ###
+As described above the module has included a script to read the data of a HTU21 sensor attached to the Raspberry.
+Additionally an example is provided to connect a HTU21 sensor to an ESP32 microcontroller and read the data via wifi.
+The config to get the data into the module is really simple because the on nearly every OS supported command "nc" is used to get the data over network.
+```json5
+
+        {
+			module: "MMM-Temperature",
+			position: "bottom_right",
+			config: {
+				sensors: [
+					{
+                        name: "Sensor One"
+                    },
+					{
+						name: "Wifi",
+						script: "/bin/nc",
+						args: "-w3 192.168.0.2 80"
+					}
+				]
+			},
+		},
+
+```
+
 
 ## Developer Information ##
 If you want to write an own script to read values of an sensor provide the following output on console to get the module to read the values:
