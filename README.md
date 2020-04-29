@@ -8,19 +8,23 @@ This module reads temperature of different sensors (default HTU21D) with externa
 
 ## Installation ##
 ### Module ###
+```
 	cd ~/MagicMirror/modules
     git clone https://github.com/Tom-Hirschberger/MMM-Temperature.git
     cd MMM-Temperature
     npm install
+```
 
 ### Optional HTU21 Library ###
 If you want to use script provided to read data of a HTU21 sensor you need to install the adafruit library first.
+```
     cd ~
     git clone https://github.com/mgaggero/Adafruit_Python_HTU21D.git
     cd Adafruit_Python_HTU21D
     sudo pip3 install .
     cd ..
     rm -rf Adafruit_Python_HTU21D
+```
 
 ### Optional HTU21 Sensor ###
 ![alt text](https://github.com/Tom-Hirschberger/MMM-Temperature/raw/master/examples/htu21/htu21.png "Wiring HTU21")
