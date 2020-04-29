@@ -28,15 +28,25 @@ module.exports = NodeHelper.create({
         curScript = self.config.sensors[curSensorId].script
       }
 
-      curScript = scriptsDir+"/"+curScript
+      if(curScript.indexOf("/") !== 0){
+        curScript = scriptsDir+"/"+curScript
+      }
 
       if(typeof self.config.sensors[curSensorId].args !== "undefined"){
         curArgs = self.config.sensors[curSensorId].args
       }
 
+      console.log(self.name+" Calling: "+curScript+" "+curArgs)
+
       let output = execSync(curScript+" "+curArgs)
       if(typeof output !== "undefined"){
-        curValues = JSON.parse(output)
+	      try {
+	        curValues = JSON.parse(output)
+	      } catch (err) {
+          console.log(self.name+" Can not parse output of sensor with id "+curSensorId+": "+output)
+		      curValues = {}
+		      curValues["error"] = true
+	      }
 
         if(curValues.error){
           self.sensorValues[curSensorId] =  {}
