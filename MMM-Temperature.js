@@ -17,7 +17,8 @@ Module.register('MMM-Temperature', {
     sensors: [],
     defaultScript: "htu21",
     defaultArgs: "",
-    fractionCount: 1
+    fractionCount: 1,
+    onlyUpdateIfValuesChanged: true
   },
 
   getStyles: function() {
@@ -29,6 +30,7 @@ Module.register('MMM-Temperature', {
     const wrapper = document.createElement('div')
       wrapper.className = "temperatureRootWrapper"
       for(let curSensorId = 0; curSensorId < self.config.sensors.length; curSensorId++){
+        self.valuesObjs[curSensorId] = []
         var sensorWrapper = document.createElement("div")
           if(typeof self.config.sensors[curSensorId].name !== "undefined"){
             sensorWrapper.className = "sensor " + self.config.sensors[curSensorId].name
@@ -64,6 +66,7 @@ Module.register('MMM-Temperature', {
                   tempValueWrapper.className = "valueWrapper"
                   var tempValue = document.createElement("div")
                     tempValue.className = "value"
+                    self.valuesObjs[curSensorId].temperature = tempValue
                     if(
                       (typeof self.values[curSensorId] !== "undefined") &&
                       (typeof self.values[curSensorId].temperature !== "undefined")){
@@ -100,6 +103,7 @@ Module.register('MMM-Temperature', {
                   humidityValueWrapper.className = "valueWrapper"
                   var humidityValue = document.createElement("div")
                     humidityValue.className = "value"
+                    self.valuesObjs[curSensorId].humidity = humidityValue
                     if(
                       (typeof self.values[curSensorId] !== "undefined") &&
                       (typeof self.values[curSensorId].humidity !== "undefined")){
@@ -126,6 +130,7 @@ Module.register('MMM-Temperature', {
   start: function () {
     const self = this
     self.values = []
+    self.valuesObjs = []
     Log.info("Starting module: " + self.name);
     self.sendSocketNotification('CONFIG', self.config)
     self.sendRequestAndResetTimer();
@@ -143,11 +148,57 @@ Module.register('MMM-Temperature', {
     }, self.config.updateInterval * 1000)
   },
 
+  notificationReceived: function (notification, payload) {
+    const self = this
+    if (notification.startsWith("TEMPERATURE_C_") ||
+        notification.startsWith("TEMPERATURE_F_") ||
+        notification.startsWith("HUMIDITY_")
+    ){
+      self.sendSocketNotification(notification, payload)
+    }
+  },
+
   socketNotificationReceived: function (notification, payload) {
     const self = this
     if(notification === "TEMPERATURE_UPDATE"){
-      self.values = payload.values
-      self.updateDom(self.config.animationSpeed)
+      if(
+        (JSON.stringify(self.values) !== JSON.stringify(payload.values)) ||
+        (!self.config.onlyUpdateIfValuesChanged)
+      ){
+        Log.info("Got new temperature values!")
+        self.values = payload.values
+        var needToUpdateDom = false
+        for(let curSensorId = 0; curSensorId < self.config.sensors.length; curSensorId++){
+          if((typeof self.values[curSensorId] !== "undefined") &&
+             (typeof self.valuesObjs[curSensorId] !== "undefined")){
+  
+              if (typeof self.valuesObjs[curSensorId].temperature !== "undefined") {
+                if (typeof self.values[curSensorId].temperature !== "undefined"){
+                  self.valuesObjs[curSensorId].temperature.innerHTML = self.values[curSensorId].temperature
+                } else {
+                  self.valuesObjs[curSensorId].temperature.innerHTML = "na"
+                }
+              }
+  
+              if (typeof self.valuesObjs[curSensorId].humidity !== "undefined") {
+                if (typeof self.values[curSensorId].humidity !== "undefined"){
+                  self.valuesObjs[curSensorId].humidity.innerHTML = self.values[curSensorId].humidity
+                } else {
+                  self.valuesObjs[curSensorId].humidity.innerHTML = "na"
+                }
+              }
+          } else {
+            needToUpdateDom = true
+            break
+          }
+        }
+
+        if (needToUpdateDom){
+          self.updateDom(self.config.animationSpeed)
+        }
+      } else {
+        Log.info("Skipping temperature update because no values changed!")
+      }
     }
   },
 })

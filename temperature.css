@@ -35,6 +35,7 @@
     font-size: 0px;
     margin: 5px;
     background-color: black;
+    min-width: calc(100% - 10px);
 }
 
 .temperatureRootWrapper .temperatureWrapper, .temperatureRootWrapper .humidityWrapper {
