@@ -61,3 +61,19 @@
     margin-left: 5px;
 }
 
+.temperatureRootWrapper .sensor .value {
+    min-width: 35px;
+}
+
+.temperatureRootWrapper .sensor .temperature.high .value, 
+.temperatureRootWrapper .sensor .temperature.high .unit, 
+.temperatureRootWrapper .sensor .humidity.high .value, 
+.temperatureRootWrapper .sensor .humidity.high .unit,
+.temperatureRootWrapper .sensor .temperature.low .value, 
+.temperatureRootWrapper .sensor .temperature.low .unit, 
+.temperatureRootWrapper .sensor .humidity.low .value, 
+.temperatureRootWrapper .sensor .humidity.low .unit
+{
+    color: red;
+}
+

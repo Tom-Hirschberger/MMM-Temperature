@@ -18,7 +18,11 @@ Module.register('MMM-Temperature', {
     defaultScript: "htu21",
     defaultArgs: "",
     fractionCount: 1,
-    onlyUpdateIfValuesChanged: true
+    onlyUpdateIfValuesChanged: true,
+    temperatureLow: -1000,
+    temperatureHigh: 1000,
+    humidityLow: -1,
+    humidityHigh: 101,
   },
 
   getStyles: function() {
@@ -37,6 +41,10 @@ Module.register('MMM-Temperature', {
           } else {
             sensorWrapper.className = "sensor"
           }
+
+          let lowValue = false
+          let highValue = false
+          let naValue = false
 
           var sensorInnerWrapper = document.createElement("div")
             sensorInnerWrapper.className = "sensorWrapper"
@@ -65,17 +73,8 @@ Module.register('MMM-Temperature', {
                 var tempValueWrapper = document.createElement("div")
                   tempValueWrapper.className = "valueWrapper"
                   var tempValue = document.createElement("div")
-                    tempValue.className = "value"
+                    let curClassName = "value"
                     self.valuesObjs[curSensorId].temperature = tempValue
-                    if(
-                      (typeof self.values[curSensorId] !== "undefined") &&
-                      (typeof self.values[curSensorId].temperature !== "undefined")){
-                      tempValue.innerHTML = self.values[curSensorId].temperature
-                    } else {
-                      tempValue.innerHTML = "na"
-                    }
-                  tempValueWrapper.appendChild(tempValue)
-
                   var tempUnit = document.createElement("div")
                     tempUnit.className = "unit"
                     if(self.config.useCelsius){
@@ -83,6 +82,56 @@ Module.register('MMM-Temperature', {
                     } else {
                       tempUnit.innerHTML = "°F"
                     }
+
+                    if(
+                      (typeof self.values[curSensorId] !== "undefined") &&
+                      (typeof self.values[curSensorId].temperature !== "undefined")){
+                      tempValue.innerHTML = self.values[curSensorId].temperature
+                      curClassName += " valid"
+                      tempWrapper.className += " valid"
+                      tempDescription.className += " valid"
+                      tempValueWrapper.className += " valid"
+                      let valueToCheck = self.config.temperatureLow
+                      if(typeof self.config.sensors[curSensorId].temperatureLow !== "undefined"){
+                        valueToCheck = self.config.sensors[curSensorId].temperatureLow
+                      }
+
+                      if (self.values[curSensorId].temperature <= valueToCheck) {
+                        curClassName += " low"
+                        tempWrapper.className += " low"
+                        tempDescription.className += " low"
+                        tempValueWrapper.className += " low"
+                        tempUnit.className += " low"
+                        lowValue = true
+                      }
+
+                      valueToCheck = self.config.temperatureHigh
+                      if(typeof self.config.sensors[curSensorId].temperatureHigh !== "undefined"){
+                        valueToCheck = self.config.sensors[curSensorId].temperatureHigh
+                      }
+
+                      console.log("####Sensor: "+self.config.sensors[curSensorId].name+" ValueHigh: "+valueToCheck)
+
+                      if (self.values[curSensorId].temperature >= valueToCheck){
+                        curClassName += " high"
+                        tempWrapper.className += " high"
+                        tempDescription.className += " high"
+                        tempValueWrapper.className += " high"
+                        tempUnit.className += " high"
+                        highValue = true
+                      }
+                    } else {
+                      tempValue.innerHTML = "na"
+                      tempWrapper.className += " na"
+                      tempDescription.className += " na"
+                      tempValueWrapper.className += " na"
+                      tempUnit.className += " na"
+                      curClassName += " invalid"
+                      naValue = true
+                    }
+                    tempValue.className = curClassName
+                  
+                  tempValueWrapper.appendChild(tempValue)
                   tempValueWrapper.appendChild(tempUnit)
                 tempInnerWrapper.appendChild(tempValueWrapper)
             tempWrapper.appendChild(tempInnerWrapper)
@@ -102,25 +151,77 @@ Module.register('MMM-Temperature', {
                 var humidityValueWrapper = document.createElement("div")
                   humidityValueWrapper.className = "valueWrapper"
                   var humidityValue = document.createElement("div")
-                    humidityValue.className = "value"
+                    curClassName = "value"
                     self.valuesObjs[curSensorId].humidity = humidityValue
+
+                    var humidityUnit = document.createElement("div")
+                      humidityUnit.className = "unit"
+                      humidityUnit.innerHTML = "&nbsp;%"
+
                     if(
                       (typeof self.values[curSensorId] !== "undefined") &&
                       (typeof self.values[curSensorId].humidity !== "undefined")){
                       humidityValue.innerHTML = self.values[curSensorId].humidity
+                      curClassName += " valid"
+
+                      valueToCheck = self.config.humidityLow
+                      if(typeof self.config.sensors[curSensorId].humidityLow !== "undefined"){
+                        valueToCheck = self.config.sensors[curSensorId].humidityLow
+                      }
+
+                      if (self.values[curSensorId].humidity <= valueToCheck) {
+                        curClassName += " low"
+                        humidityWrapper.className += " low"
+                        humidityDescription.className += " low"
+                        humidityValueWrapper.className += " low"
+                        humidityUnit.className += " low"
+                        lowValue = true
+                      }
+
+                      valueToCheck = self.config.humidityHigh
+                      if(typeof self.config.sensors[curSensorId].humidityHigh !== "undefined"){
+                        valueToCheck = self.config.sensors[curSensorId].humidityHigh
+                      }
+
+                      if (self.values[curSensorId].humidity >= valueToCheck) {
+                        curClassName += " high"
+                        humidityWrapper.className += " high"
+                        humidityDescription.className += " high"
+                        humidityValueWrapper.className += " high"
+                        humidityUnit.className += " high"
+                        highValue = true
+                      }
                     } else {
                       humidityValue.innerHTML = "na"
+                      curClassName += " na"
+                      humidityWrapper.className += " na"
+                      humidityDescription.className += " na"
+                      humidityValueWrapper.className += " na"
+                      humidityUnit.className += " na"
+                      naValue = true
                     }
-                  humidityValueWrapper.appendChild(humidityValue)
+                    humidityValue.className = curClassName
 
-                  var humidityUnit = document.createElement("div")
-                    humidityUnit.className = "unit"
-                    humidityUnit.innerHTML = "&nbsp;%"
+                  humidityValueWrapper.appendChild(humidityValue)
                   humidityValueWrapper.appendChild(humidityUnit)
               humidityInnerWrapper.appendChild(humidityValueWrapper)
             humidityWrapper.appendChild(humidityInnerWrapper)
           sensorInnerWrapper.appendChild(humidityWrapper)
         sensorWrapper.appendChild(sensorInnerWrapper)
+
+        if(lowValue){
+          sensorWrapper.className = sensorWrapper.className += " low"
+        }
+
+        if(highValue){
+          sensorWrapper.className = sensorWrapper.className += " high"
+        }
+
+        if(naValue){
+          sensorWrapper.className = sensorWrapper.className += " na"
+        } else {
+          sensorWrapper.className = sensorWrapper.className += " valid"
+        }
 
         wrapper.appendChild(sensorWrapper)
       }
@@ -167,35 +268,36 @@ Module.register('MMM-Temperature', {
       ){
         Log.info("Got new temperature values!")
         self.values = payload.values
-        var needToUpdateDom = false
-        for(let curSensorId = 0; curSensorId < self.config.sensors.length; curSensorId++){
-          if((typeof self.values[curSensorId] !== "undefined") &&
-             (typeof self.valuesObjs[curSensorId] !== "undefined")){
+        // var needToUpdateDom = true
+        // for(let curSensorId = 0; curSensorId < self.config.sensors.length; curSensorId++){
+        //   if((typeof self.values[curSensorId] !== "undefined") &&
+        //      (typeof self.valuesObjs[curSensorId] !== "undefined")){
   
-              if (typeof self.valuesObjs[curSensorId].temperature !== "undefined") {
-                if (typeof self.values[curSensorId].temperature !== "undefined"){
-                  self.valuesObjs[curSensorId].temperature.innerHTML = self.values[curSensorId].temperature
-                } else {
-                  self.valuesObjs[curSensorId].temperature.innerHTML = "na"
-                }
-              }
+        //       if (typeof self.valuesObjs[curSensorId].temperature !== "undefined") {
+        //         if (typeof self.values[curSensorId].temperature !== "undefined"){
+        //           self.valuesObjs[curSensorId].temperature.innerHTML = self.values[curSensorId].temperature
+        //         } else {
+        //           self.valuesObjs[curSensorId].temperature.innerHTML = "na"
+        //         }
+        //       }
   
-              if (typeof self.valuesObjs[curSensorId].humidity !== "undefined") {
-                if (typeof self.values[curSensorId].humidity !== "undefined"){
-                  self.valuesObjs[curSensorId].humidity.innerHTML = self.values[curSensorId].humidity
-                } else {
-                  self.valuesObjs[curSensorId].humidity.innerHTML = "na"
-                }
-              }
-          } else {
-            needToUpdateDom = true
-            break
-          }
-        }
+        //       if (typeof self.valuesObjs[curSensorId].humidity !== "undefined") {
+        //         if (typeof self.values[curSensorId].humidity !== "undefined"){
+        //           self.valuesObjs[curSensorId].humidity.innerHTML = self.values[curSensorId].humidity
+        //         } else {
+        //           self.valuesObjs[curSensorId].humidity.innerHTML = "na"
+        //         }
+        //       }
+        //   } else {
+        //     needToUpdateDom = true
+        //     break
+        //   }
+        // }
 
-        if (needToUpdateDom){
-          self.updateDom(self.config.animationSpeed)
-        }
+        // if (needToUpdateDom){
+          // self.updateDom(self.config.animationSpeed)
+        // }
+        self.updateDom(self.config.animationSpeed)
       } else {
         Log.info("Skipping temperature update because no values changed!")
       }

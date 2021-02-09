@@ -51,9 +51,14 @@ This is a more complex version which uses two sensors with names. The script of 
             module: "MMM-Temperature",
             position: "bottom_right",
             config: {
+                temperatureHigh: 30,
+                temperatureLow: 10,
+                humidityHigh: 60,
+                humidityLow: 30,
 			    sensors: [
                     {
-                        name: "Sensor One"
+                        name: "Sensor One",
+                        temperatureHigh: 20,
                     },
                     {
                         name: "Sensor Two",
@@ -75,6 +80,10 @@ This is a more complex version which uses two sensors with names. The script of 
 | fractionCount | How many decimal places should be displayed after the "." | Integer | 1 |
 | defaultScript | The script which is used to get the values of sensors with no own script option | String | "htu21" |
 | defaultArgs | The arguments of the default script | String | "" |
+| temperatureHigh | Specify a value of which temperature will be marked as high (in default displayed as red) | Float | 1000 |
+| temperatureLow | Specify a value of which temperature will be marked as low (in default displayed as red) | Float | -1000 |
+| humidityHigh | Specify a value of which humidity will be marked as high (in default displayed as red) | Float | 101 |
+| humidityLow | Specify a value of which humidity will be marked as low (in default displayed as red) | Float | -1 |
 | sensors | The array containing the configuration of the different sensors | Array | [] |
 
 ### Sensors ###
@@ -83,6 +92,12 @@ This is a more complex version which uses two sensors with names. The script of 
 | name | The name of the sensor (if an name should be displayed) | false |
 | script | The script to call to get the values of the sensor. If not present the default script is used | false |
 | args | The arguments to pass to the script | false |
+| temperatureHigh | Specify a value of which temperature will be marked as high (in default displayed as red) | Float | 1000 |
+| temperatureLow | Specify a value of which temperature will be marked as low (in default displayed as red) | Float | -1000 |
+| humidityHigh | Specify a value of which humidity will be marked as high (in default displayed as red) | Float | 101 |
+| humidityLow | Specify a value of which humidity will be marked as low (in default displayed as red) | Float | -1 |
+  
+**The temperature and humidity high and low values configured at sensors will override the global configured!**
 
 ## Beispiele ##
 ### HTU21 ###
