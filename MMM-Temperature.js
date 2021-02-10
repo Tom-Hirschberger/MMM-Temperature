@@ -15,6 +15,7 @@ Module.register('MMM-Temperature', {
     temperatureText: "Temperature:",
     humidityText: "Humidity: ",
     showHumidiy: true,
+    showTemperature: true,
     sensors: [],
     defaultScript: "htu21",
     defaultArgs: "",
@@ -61,83 +62,89 @@ Module.register('MMM-Temperature', {
               sensorInnerWrapper.appendChild(nameWrapper)
             }
 
-            var tempWrapper = document.createElement("div")
-              tempWrapper.className = "temperature"
-              var tempInnerWrapper = document.createElement("div")
-                tempInnerWrapper.className = "temperatureWrapper"
+            let valueToCheck = self.config.showTemperature
+            if(typeof self.config.sensors[curSensorId].showTemperature !== "undefined"){
+              valueToCheck = self.config.sensors[curSensorId].showTemperature
+            }
+            if (valueToCheck){
+              var tempWrapper = document.createElement("div")
+                tempWrapper.className = "temperature"
+                var tempInnerWrapper = document.createElement("div")
+                  tempInnerWrapper.className = "temperatureWrapper"
 
-                var tempDescription = document.createElement("div")
-                  tempDescription.className = "description"
-                  tempDescription.innerHTML = self.config.temperatureText
-                tempInnerWrapper.appendChild(tempDescription)
+                  var tempDescription = document.createElement("div")
+                    tempDescription.className = "description"
+                    tempDescription.innerHTML = self.config.temperatureText
+                  tempInnerWrapper.appendChild(tempDescription)
 
-                var tempValueWrapper = document.createElement("div")
-                  tempValueWrapper.className = "valueWrapper"
-                  var tempValue = document.createElement("div")
-                    let curClassName = "value"
-                    self.valuesObjs[curSensorId].temperature = tempValue
-                  var tempUnit = document.createElement("div")
-                    tempUnit.className = "unit"
-                    if(self.config.useCelsius){
-                      tempUnit.innerHTML = "°C"
-                    } else {
-                      tempUnit.innerHTML = "°F"
-                    }
-
-                    if(
-                      (typeof self.values[curSensorId] !== "undefined") &&
-                      (typeof self.values[curSensorId].temperature !== "undefined")){
-                      tempValue.innerHTML = self.values[curSensorId].temperature
-                      curClassName += " valid"
-                      tempWrapper.className += " valid"
-                      tempDescription.className += " valid"
-                      tempValueWrapper.className += " valid"
-                      let valueToCheck = self.config.temperatureLow
-                      if(typeof self.config.sensors[curSensorId].temperatureLow !== "undefined"){
-                        valueToCheck = self.config.sensors[curSensorId].temperatureLow
+                  var tempValueWrapper = document.createElement("div")
+                    tempValueWrapper.className = "valueWrapper"
+                    var tempValue = document.createElement("div")
+                      let curClassName = "value"
+                      self.valuesObjs[curSensorId].temperature = tempValue
+                    var tempUnit = document.createElement("div")
+                      tempUnit.className = "unit"
+                      if(self.config.useCelsius){
+                        tempUnit.innerHTML = "°C"
+                      } else {
+                        tempUnit.innerHTML = "°F"
                       }
 
-                      if (self.values[curSensorId].temperature <= valueToCheck) {
-                        curClassName += " low"
-                        tempWrapper.className += " low"
-                        tempDescription.className += " low"
-                        tempValueWrapper.className += " low"
-                        tempUnit.className += " low"
-                        lowValue = true
+                      if(
+                        (typeof self.values[curSensorId] !== "undefined") &&
+                        (typeof self.values[curSensorId].temperature !== "undefined")){
+                        tempValue.innerHTML = self.values[curSensorId].temperature
+                        curClassName += " valid"
+                        tempWrapper.className += " valid"
+                        tempDescription.className += " valid"
+                        tempValueWrapper.className += " valid"
+                        valueToCheck = self.config.temperatureLow
+                        if(typeof self.config.sensors[curSensorId].temperatureLow !== "undefined"){
+                          valueToCheck = self.config.sensors[curSensorId].temperatureLow
+                        }
+
+                        if (self.values[curSensorId].temperature <= valueToCheck) {
+                          curClassName += " low"
+                          tempWrapper.className += " low"
+                          tempDescription.className += " low"
+                          tempValueWrapper.className += " low"
+                          tempUnit.className += " low"
+                          lowValue = true
+                        }
+
+                        valueToCheck = self.config.temperatureHigh
+                        if(typeof self.config.sensors[curSensorId].temperatureHigh !== "undefined"){
+                          valueToCheck = self.config.sensors[curSensorId].temperatureHigh
+                        }
+
+                        console.log("####Sensor: "+self.config.sensors[curSensorId].name+" ValueHigh: "+valueToCheck)
+
+                        if (self.values[curSensorId].temperature >= valueToCheck){
+                          curClassName += " high"
+                          tempWrapper.className += " high"
+                          tempDescription.className += " high"
+                          tempValueWrapper.className += " high"
+                          tempUnit.className += " high"
+                          highValue = true
+                        }
+                      } else {
+                        tempValue.innerHTML = "na"
+                        tempWrapper.className += " na"
+                        tempDescription.className += " na"
+                        tempValueWrapper.className += " na"
+                        tempUnit.className += " na"
+                        curClassName += " invalid"
+                        naValue = true
                       }
-
-                      valueToCheck = self.config.temperatureHigh
-                      if(typeof self.config.sensors[curSensorId].temperatureHigh !== "undefined"){
-                        valueToCheck = self.config.sensors[curSensorId].temperatureHigh
-                      }
-
-                      console.log("####Sensor: "+self.config.sensors[curSensorId].name+" ValueHigh: "+valueToCheck)
-
-                      if (self.values[curSensorId].temperature >= valueToCheck){
-                        curClassName += " high"
-                        tempWrapper.className += " high"
-                        tempDescription.className += " high"
-                        tempValueWrapper.className += " high"
-                        tempUnit.className += " high"
-                        highValue = true
-                      }
-                    } else {
-                      tempValue.innerHTML = "na"
-                      tempWrapper.className += " na"
-                      tempDescription.className += " na"
-                      tempValueWrapper.className += " na"
-                      tempUnit.className += " na"
-                      curClassName += " invalid"
-                      naValue = true
-                    }
-                    tempValue.className = curClassName
-                  
-                  tempValueWrapper.appendChild(tempValue)
-                  tempValueWrapper.appendChild(tempUnit)
-                tempInnerWrapper.appendChild(tempValueWrapper)
-            tempWrapper.appendChild(tempInnerWrapper)
-            sensorInnerWrapper.appendChild(tempWrapper)
-
+                      tempValue.className = curClassName
+                    
+                    tempValueWrapper.appendChild(tempValue)
+                    tempValueWrapper.appendChild(tempUnit)
+                  tempInnerWrapper.appendChild(tempValueWrapper)
+              tempWrapper.appendChild(tempInnerWrapper)
+              sensorInnerWrapper.appendChild(tempWrapper)
+            }
+            
             valueToCheck = self.config.showHumidiy
             if(typeof self.config.sensors[curSensorId].showHumidiy !== "undefined"){
               valueToCheck = self.config.sensors[curSensorId].showHumidiy
