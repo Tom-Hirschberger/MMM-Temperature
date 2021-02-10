@@ -14,6 +14,7 @@ Module.register('MMM-Temperature', {
     useCelsius: true,
     temperatureText: "Temperature:",
     humidityText: "Humidity: ",
+    showHumidiy: true,
     sensors: [],
     defaultScript: "htu21",
     defaultArgs: "",
@@ -137,76 +138,83 @@ Module.register('MMM-Temperature', {
             tempWrapper.appendChild(tempInnerWrapper)
             sensorInnerWrapper.appendChild(tempWrapper)
 
-            var humidityWrapper = document.createElement("div")
-              humidityWrapper.className = "humidity"
-              var humidityInnerWrapper = document.createElement("div")
-                humidityInnerWrapper.className = "humidityWrapper"
+            valueToCheck = self.config.showHumidiy
+            if(typeof self.config.sensors[curSensorId].showHumidiy !== "undefined"){
+              valueToCheck = self.config.sensors[curSensorId].showHumidiy
+            }
 
-                var humidityDescription = document.createElement("div")
-                  humidityDescription.className = "description"
-                  humidityDescription.innerHTML = self.config.humidityText
-                  humidityInnerWrapper.appendChild(humidityDescription)
+            if(valueToCheck){
+              var humidityWrapper = document.createElement("div")
+                humidityWrapper.className = "humidity"
+                var humidityInnerWrapper = document.createElement("div")
+                  humidityInnerWrapper.className = "humidityWrapper"
+
+                  var humidityDescription = document.createElement("div")
+                    humidityDescription.className = "description"
+                    humidityDescription.innerHTML = self.config.humidityText
+                    humidityInnerWrapper.appendChild(humidityDescription)
 
 
-                var humidityValueWrapper = document.createElement("div")
-                  humidityValueWrapper.className = "valueWrapper"
-                  var humidityValue = document.createElement("div")
-                    curClassName = "value"
-                    self.valuesObjs[curSensorId].humidity = humidityValue
+                  var humidityValueWrapper = document.createElement("div")
+                    humidityValueWrapper.className = "valueWrapper"
+                    var humidityValue = document.createElement("div")
+                      curClassName = "value"
+                      self.valuesObjs[curSensorId].humidity = humidityValue
 
-                    var humidityUnit = document.createElement("div")
-                      humidityUnit.className = "unit"
-                      humidityUnit.innerHTML = "&nbsp;%"
+                      var humidityUnit = document.createElement("div")
+                        humidityUnit.className = "unit"
+                        humidityUnit.innerHTML = "&nbsp;%"
 
-                    if(
-                      (typeof self.values[curSensorId] !== "undefined") &&
-                      (typeof self.values[curSensorId].humidity !== "undefined")){
-                      humidityValue.innerHTML = self.values[curSensorId].humidity
-                      curClassName += " valid"
+                      if(
+                        (typeof self.values[curSensorId] !== "undefined") &&
+                        (typeof self.values[curSensorId].humidity !== "undefined")){
+                        humidityValue.innerHTML = self.values[curSensorId].humidity
+                        curClassName += " valid"
 
-                      valueToCheck = self.config.humidityLow
-                      if(typeof self.config.sensors[curSensorId].humidityLow !== "undefined"){
-                        valueToCheck = self.config.sensors[curSensorId].humidityLow
+                        valueToCheck = self.config.humidityLow
+                        if(typeof self.config.sensors[curSensorId].humidityLow !== "undefined"){
+                          valueToCheck = self.config.sensors[curSensorId].humidityLow
+                        }
+
+                        if (self.values[curSensorId].humidity <= valueToCheck) {
+                          curClassName += " low"
+                          humidityWrapper.className += " low"
+                          humidityDescription.className += " low"
+                          humidityValueWrapper.className += " low"
+                          humidityUnit.className += " low"
+                          lowValue = true
+                        }
+
+                        valueToCheck = self.config.humidityHigh
+                        if(typeof self.config.sensors[curSensorId].humidityHigh !== "undefined"){
+                          valueToCheck = self.config.sensors[curSensorId].humidityHigh
+                        }
+
+                        if (self.values[curSensorId].humidity >= valueToCheck) {
+                          curClassName += " high"
+                          humidityWrapper.className += " high"
+                          humidityDescription.className += " high"
+                          humidityValueWrapper.className += " high"
+                          humidityUnit.className += " high"
+                          highValue = true
+                        }
+                      } else {
+                        humidityValue.innerHTML = "na"
+                        curClassName += " na"
+                        humidityWrapper.className += " na"
+                        humidityDescription.className += " na"
+                        humidityValueWrapper.className += " na"
+                        humidityUnit.className += " na"
+                        naValue = true
                       }
+                      humidityValue.className = curClassName
 
-                      if (self.values[curSensorId].humidity <= valueToCheck) {
-                        curClassName += " low"
-                        humidityWrapper.className += " low"
-                        humidityDescription.className += " low"
-                        humidityValueWrapper.className += " low"
-                        humidityUnit.className += " low"
-                        lowValue = true
-                      }
-
-                      valueToCheck = self.config.humidityHigh
-                      if(typeof self.config.sensors[curSensorId].humidityHigh !== "undefined"){
-                        valueToCheck = self.config.sensors[curSensorId].humidityHigh
-                      }
-
-                      if (self.values[curSensorId].humidity >= valueToCheck) {
-                        curClassName += " high"
-                        humidityWrapper.className += " high"
-                        humidityDescription.className += " high"
-                        humidityValueWrapper.className += " high"
-                        humidityUnit.className += " high"
-                        highValue = true
-                      }
-                    } else {
-                      humidityValue.innerHTML = "na"
-                      curClassName += " na"
-                      humidityWrapper.className += " na"
-                      humidityDescription.className += " na"
-                      humidityValueWrapper.className += " na"
-                      humidityUnit.className += " na"
-                      naValue = true
-                    }
-                    humidityValue.className = curClassName
-
-                  humidityValueWrapper.appendChild(humidityValue)
-                  humidityValueWrapper.appendChild(humidityUnit)
-              humidityInnerWrapper.appendChild(humidityValueWrapper)
-            humidityWrapper.appendChild(humidityInnerWrapper)
-          sensorInnerWrapper.appendChild(humidityWrapper)
+                    humidityValueWrapper.appendChild(humidityValue)
+                    humidityValueWrapper.appendChild(humidityUnit)
+                humidityInnerWrapper.appendChild(humidityValueWrapper)
+              humidityWrapper.appendChild(humidityInnerWrapper)
+            sensorInnerWrapper.appendChild(humidityWrapper)
+          }
         sensorWrapper.appendChild(sensorInnerWrapper)
 
         if(lowValue){

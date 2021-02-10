@@ -1,12 +1,13 @@
-.temperatureRootWrapper .module-content{
+
+.temperatureRootWrapper{
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
     font-size: 0px;
+    align-items: flex-start;
 }
 
 .temperatureRootWrapper .sensor {
-    justify-content: stretch;
     display: flex;
     flex-direction: column;
     align-items: center;

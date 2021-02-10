@@ -44,7 +44,11 @@ module.exports = NodeHelper.create({
 
         let output = null
         try{
-          output = execSync(curScript+" "+curArgs)
+          if(typeof self.config.sensors[curSensorId].timeout !== "undefined"){
+            output = execSync(curScript+" "+curArgs, timeout=self.config.sensors[curSensorId].timeout)
+          } else {
+            output = execSync(curScript+" "+curArgs)
+          }
         } catch (err){
           output = null
         }
@@ -52,6 +56,7 @@ module.exports = NodeHelper.create({
         if(output){
           try {
             curValues = JSON.parse(output)
+            console.log(JSON.stringify(curValues))
           } catch (err) {
             console.log(self.name+" Can not parse output of sensor with id "+curSensorId+": "+output)
             curValues = {}

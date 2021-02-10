@@ -35,16 +35,22 @@ if len(sys.argv) > 1:
             temp_string = lines[1][equals_pos+2:]
             result["temperature_c"] = float(temp_string) / 1000.0
             result["temperature_f"] = (result["temperature_c"]*1.8) + 32
-            result["humidity"] = "-1"
-            result["error"] = False    
+            result["humidity"] = 0
+            result["lines"] = lines
+            result["error"] = False 
+        else:
+            result["temperature_c"] = 0.0
+            result["humidity"] = -1
+            result["temperature_f"] = (result["temperature_c"]*1.8) + 32
+            result["error"] = True
     except:
         result["temperature_c"] = 0.0
-        result["humidity"] = "-1"
+        result["humidity"] = -1
         result["temperature_f"] = (result["temperature_c"]*1.8) + 32
         result["error"] = True
 else:
     result["temperature_c"] = 0.0
-    result["humidity"] = "-1"
+    result["humidity"] = -1
     result["temperature_f"] = (result["temperature_c"]*1.8) + 32
     result["error"] = True
 
