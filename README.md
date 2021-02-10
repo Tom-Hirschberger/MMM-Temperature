@@ -9,7 +9,7 @@ This module reads temperature of different sensors (default HTU21D) with externa
 ## Installation ##
 ### Module ###
 ```
-	cd ~/MagicMirror/modules
+    cd ~/MagicMirror/modules
     git clone https://github.com/Tom-Hirschberger/MMM-Temperature.git
     cd MMM-Temperature
     npm install
@@ -46,9 +46,9 @@ If you use an HTU21 attached to the Pi and want to use the htu21 script to read 
 ```json5
         {
             module: "MMM-Temperature",
-	        position: "bottom_right",
-	        config: {
-		        sensors: [
+	    position: "bottom_right",
+	    config: {
+		sensors: [
                     {}
                 ]
             },
@@ -121,14 +121,14 @@ Additionally an example is provided to connect a HTU21 sensor to an ESP32 microc
 The config to get the data into the module is really simple because the on nearly every OS supported command "nc" is used to get the data over network.
 ```json5
 
-        {
+		{
 			module: "MMM-Temperature",
 			position: "bottom_right",
 			config: {
 				sensors: [
 					{
-                        name: "Sensor One"
-                    },
+					    name: "Sensor One"
+					},
 				]
 			},
 		},
@@ -138,16 +138,17 @@ The config to get the data into the module is really simple because the on nearl
 ### DHT11 ###
 ```json5
 
-        {
+		{
 			module: "MMM-Temperature",
 			position: "bottom_right",
 			config: {
 				sensors: [
 					{
-                        name: "Sensor One",
-                        script: "dht11",
-                        args: "4" //Change this to the GPIO number the sensor is connected to
-                    },				]
+					    name: "Sensor One",
+					    script: "dht11",
+					    args: "4" //Change this to the GPIO number the sensor is connected to
+					},
+				]
 			},
 		},
 
@@ -156,16 +157,17 @@ The config to get the data into the module is really simple because the on nearl
 ### DHT22 ###
 ```json5
 
-        {
+		{
 			module: "MMM-Temperature",
 			position: "bottom_right",
 			config: {
 				sensors: [
 					{
-                        name: "Sensor One",
-                        script: "dht22",
-                        args: "4" //Change this to the GPIO number the sensor is connected to
-                    },				]
+					    name: "Sensor One",
+					    script: "dht22",
+					    args: "4" //Change this to the GPIO number the sensor is connected to
+					},
+				]
 			},
 		},
 
@@ -174,15 +176,16 @@ The config to get the data into the module is really simple because the on nearl
 ### BME280 ###
 ```json5
 
-        {
+		{
 			module: "MMM-Temperature",
 			position: "bottom_right",
 			config: {
 				sensors: [
 					{
-                        name: "Sensor One",
-                        script: "bme280",
-                    },				]
+					    name: "Sensor One",
+					    script: "bme280",
+					},
+				]
 			},
 		},
 
@@ -191,17 +194,18 @@ The config to get the data into the module is really simple because the on nearl
 ### DS18B20 ###
 ```json5
 
-        {
+		{
 			module: "MMM-Temperature",
 			position: "bottom_right",
 			config: {
 				sensors: [
 					{
-                        name: "Sensor One",
-                        script: "ds18b20",
-                        args: "28-XXXXXXXX", //Get the id of your sensor by running "ls /sys/bus/w1/devices/ | grep 28-"
-                        showHumidity: false //As the sensor only provides temperature and no humidity we hide the humdidity section
-                    },				]
+					    name: "Sensor One",
+					    script: "ds18b20",
+					    args: "28-XXXXXXXX", //Get the id of your sensor by running "ls /sys/bus/w1/devices/ | grep 28-"
+					    showHumidity: false //As the sensor only provides temperature and no humidity we hide the humdidity section
+                    			},
+				]
 			},
 		},
 
@@ -211,16 +215,17 @@ The config to get the data into the module is really simple because the on nearl
 See the [plain TCP example directory](https://github.com/Tom-Hirschberger/MMM-Temperature/raw/master/examples/PlainTCP) for some examples of howto connect an HTU21 sensor to an ESP32 or ESP8266 board.
 ```json5
 
-        {
+		{
 			module: "MMM-Temperature",
 			position: "bottom_right",
 			config: {
 				sensors: [
 					{
-                        name: "Wifi",
-						script: "/bin/nc",
-						args: "-w3 192.168.0.2 80" //Change the IP to the one of the ESP board your sensor is connected to
-                    },				]
+					    name: "Wifi",
+					    script: "/bin/nc",
+					    args: "-w3 192.168.0.2 80" //Change the IP to the one of the ESP board your sensor is connected to
+                    			},
+				]
 			},
 		},
 
@@ -230,19 +235,20 @@ See the [plain TCP example directory](https://github.com/Tom-Hirschberger/MMM-Te
 See the [MQTT example directory](https://github.com/Tom-Hirschberger/MMM-Temperature/raw/master/examples/MQTT) for some examples of howto connect an HTU21 sensor to an ESP32 or ESP8266 board and send the values to your MQTT Server (i.e mosquitto). You will need to have the [MMM-MQTTbridge](https://github.com/sergge1/MMM-MQTTbridge) module of Sergge1 up and running to use this configuration.
 ```json5
 
-        {
+		{
 			module: "MMM-Temperature",
 			position: "bottom_right",
 			config: {
 				sensors: [
 					{
-                        name: "Wifi",
-						notificationId: "ESP_TEMP",
-                    },				]
+					    name: "Wifi",
+					    notificationId: "ESP_TEMP",
+                    			},
+				]
 			},
 		},
 
-        {
+		{
 			module: 'MMM-MQTTbridge',
 			config: {
 				mqttServer: "mqtt://:@localhost:1883",
