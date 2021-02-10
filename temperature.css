@@ -1,12 +1,13 @@
-.temperatureRootWrapper .module-content{
+
+.temperatureRootWrapper{
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
     font-size: 0px;
+    align-items: flex-start;
 }
 
 .temperatureRootWrapper .sensor {
-    justify-content: stretch;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -35,6 +36,7 @@
     font-size: 0px;
     margin: 5px;
     background-color: black;
+    min-width: calc(100% - 10px);
 }
 
 .temperatureRootWrapper .temperatureWrapper, .temperatureRootWrapper .humidityWrapper {
@@ -58,5 +60,21 @@
 
 .temperatureRootWrapper .unit {
     margin-left: 5px;
+}
+
+.temperatureRootWrapper .sensor .value {
+    min-width: 35px;
+}
+
+.temperatureRootWrapper .sensor .temperature.high .value, 
+.temperatureRootWrapper .sensor .temperature.high .unit, 
+.temperatureRootWrapper .sensor .humidity.high .value, 
+.temperatureRootWrapper .sensor .humidity.high .unit,
+.temperatureRootWrapper .sensor .temperature.low .value, 
+.temperatureRootWrapper .sensor .temperature.low .unit, 
+.temperatureRootWrapper .sensor .humidity.low .value, 
+.temperatureRootWrapper .sensor .humidity.low .unit
+{
+    color: red;
 }
 

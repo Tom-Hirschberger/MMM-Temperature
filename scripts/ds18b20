@@ -1,0 +1,57 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+#This is a script to read values of DS18B20 sensors:
+#Connect VCC pin to 3.3V
+#Connect Ground pin to Ground
+#Add an 4.7kOhm resister between data wire and VCC
+#Add the the data wire to GPIO4 (which is the 1-wire bus pin)
+#more info at: https://www.circuitbasics.com/raspberry-pi-ds18b20-temperature-sensor-tutorial/
+#Add the following lines to /etc/modules
+#  w1_gpio
+#  w1_therm
+#Add the following line to /etc/boot/config.txt
+#  dtoverlay=w1-gpio
+#Find the id of your sensor (starting with "28-") in /sys/bus/w1/devices
+#  ls /sys/bus/w1/devices/ | grep 28-
+#Check if you get values
+#  cat /sys/bus/w1/devices/YOUR_SENSOR_ID/w1_slave
+import time
+import json
+import sys
+
+result = {}
+
+
+if len(sys.argv) > 1:
+    sensor_id = sys.argv[1]
+    sensor = "/sys/bus/w1/devices/%s/w1_slave" % sensor_id
+    try:
+        f = open(sensor, 'r')
+        lines = f.readlines()
+        f.close()
+
+        equals_pos = lines[1].find('t=')
+        if equals_pos != -1:
+            temp_string = lines[1][equals_pos+2:]
+            result["temperature_c"] = float(temp_string) / 1000.0
+            result["temperature_f"] = (result["temperature_c"]*1.8) + 32
+            result["humidity"] = 0
+            result["lines"] = lines
+            result["error"] = False 
+        else:
+            result["temperature_c"] = 0.0
+            result["humidity"] = -1
+            result["temperature_f"] = (result["temperature_c"]*1.8) + 32
+            result["error"] = True
+    except:
+        result["temperature_c"] = 0.0
+        result["humidity"] = -1
+        result["temperature_f"] = (result["temperature_c"]*1.8) + 32
+        result["error"] = True
+else:
+    result["temperature_c"] = 0.0
+    result["humidity"] = -1
+    result["temperature_f"] = (result["temperature_c"]*1.8) + 32
+    result["error"] = True
+
+print(json.dumps(result))

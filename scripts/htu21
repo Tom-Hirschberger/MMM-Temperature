@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+#Install Dependencies:
+#  cd ~
+#  git clone https://github.com/mgaggero/Adafruit_Python_HTU21D.git
+#  cd Adafruit_Python_HTU21D
+#  sudo pip3 install .
+#  cd ..
+#  rm -rf Adafruit_Python_HTU21D
+
 from Adafruit_HTU21D.HTU21D import HTU21D
 import json
 

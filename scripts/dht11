@@ -1,0 +1,31 @@
+#!/bin/python3
+#Install Dependencies:
+#  pip3 install adafruit-circuitpython-dht
+#  sudo apt-get install libgpiod2
+import time
+import board
+import adafruit_dht
+import json
+import sys
+
+gpio_nr = 4
+if len(sys.argv) > 1:
+    gpio_nr = int(sys.argv[1])
+
+
+# Initial the dht device, with data pin connected to:
+dhtDevice = adafruit_dht.DHT11(getattr(board, "D%d"%gpio_nr))
+
+result = {}
+try:
+    result["temperature_c"] = dhtDevice.temperature
+    result["humidity"] = dhtDevice.humidity
+    result["temperature_f"] = (result["temperature_c"]*1.8) + 32
+    result["error"] = False
+except:
+    result["temperature_c"] = 0.0
+    result["humidity"] = 0.0
+    result["temperature_f"] = (result["temperature_c"]*1.8) + 32
+    result["error"] = True
+
+print(json.dumps(result))
