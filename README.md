@@ -111,6 +111,7 @@ This is a more complex version which uses two sensors with names. The script of 
 | showHumidity | Controls if the humidity will be displayed for THIS sensor | Boolean | true |
 | humidityHigh | Specify a value of which humidity will be marked as high (in default displayed as red) | Float | 101 |
 | humidityLow | Specify a value of which humidity will be marked as low (in default displayed as red) | Float | -1 |
+| useValuesCnt | Normally a sensors values get updated each time the updateInterval is reached. If you want to re-use the values a couple of times (i.e. if the sensor is connected via MQTT and does not send new values that often) you can specify a number of how often the values should be used. | Integer | undefined |
   
 **The temperature and humidity high and low values and the showTemperature and showHumdity values configured at sensors will override the global configured ones!**
 
