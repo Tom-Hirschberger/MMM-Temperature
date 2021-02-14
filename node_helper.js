@@ -15,6 +15,7 @@ module.exports = NodeHelper.create({
   start: function () {
     this.started = false
     this.sensorValues = []
+    this.sensorValuesUseCount = []
     this.notificationSensors = {}
   },
 
@@ -23,99 +24,127 @@ module.exports = NodeHelper.create({
     console.log(self.name+": Updating sensor values")
 
     for(let curSensorId = 0; curSensorId < self.config.sensors.length; curSensorId++){
-      if (typeof self.config.sensors[curSensorId].notificationId === "undefined") {
-        let curScript = self.config.defaultScript
-        let curArgs = self.config.defaultArgs
-        if(typeof self.config.sensors[curSensorId].script !== "undefined"){
-          curScript = self.config.sensors[curSensorId].script
-        }
 
-        if(curScript.indexOf("/") !== 0){
-          curScript = scriptsDir+"/"+curScript
-        }
+      if (typeof self.sensorValues[curSensorId] === "undefined"){
+        self.sensorValues[curSensorId] = {"error":false}
+      }
 
-        if(typeof self.config.sensors[curSensorId].args !== "undefined"){
-          curArgs = self.config.sensors[curSensorId].args
-        }
-
-        self.sensorValues[curSensorId] =  {}
-
-        console.log(self.name+" Calling: "+curScript+" "+curArgs)
-
-        let output = null
-        try{
-          if(typeof self.config.sensors[curSensorId].timeout !== "undefined"){
-            output = execSync(curScript+" "+curArgs, timeout=self.config.sensors[curSensorId].timeout)
-          } else {
-            output = execSync(curScript+" "+curArgs)
-          }
-        } catch (err){
-          output = null
-        }
-        
-        if(output){
-          try {
-            curValues = JSON.parse(output)
-            console.log(JSON.stringify(curValues))
-          } catch (err) {
-            console.log(self.name+" Can not parse output of sensor with id "+curSensorId+": "+output)
-            curValues = {}
-            curValues["error"] = true
+      if (
+        (typeof self.config.sensors[curSensorId].useValuesCnt === "undefined") ||
+        (typeof self.sensorValues[curSensorId].temperature === "undefined") ||
+        (typeof self.sensorValues[curSensorId].humidity === "undefined") ||
+        (typeof self.sensorValuesUseCount[curSensorId] === "undefined") ||
+        (self.sensorValuesUseCount[curSensorId] >= self.config.sensors[curSensorId].useValuesCnt)
+      ){
+        if (typeof self.config.sensors[curSensorId].notificationId === "undefined") {
+          self.sensorValuesUseCount[curSensorId] = 1
+          let curScript = self.config.defaultScript
+          let curArgs = self.config.defaultArgs
+          if(typeof self.config.sensors[curSensorId].script !== "undefined"){
+            curScript = self.config.sensors[curSensorId].script
           }
 
-          if(curValues.error){
-            console.log(this.name+": Error while reading data of sensor with id "+curSensorId+"!")
-          } else {
-            if(self.config.useCelsius){
-              if(typeof curValues.temperature_c === "undefined"){
-                if(typeof curValues.temperature_f !== "undefined"){
-                  curValues.temperature_c = (curValues.temperature_f - 32.0) / 1.8
+          if(curScript.indexOf("/") !== 0){
+            curScript = scriptsDir+"/"+curScript
+          }
+
+          if(typeof self.config.sensors[curSensorId].args !== "undefined"){
+            curArgs = self.config.sensors[curSensorId].args
+          }
+
+          self.sensorValues[curSensorId] =  {}
+
+          console.log(self.name+" Calling: "+curScript+" "+curArgs)
+
+          let output = null
+          try{
+            if(typeof self.config.sensors[curSensorId].timeout !== "undefined"){
+              output = execSync(curScript+" "+curArgs, timeout=self.config.sensors[curSensorId].timeout)
+            } else {
+              output = execSync(curScript+" "+curArgs)
+            }
+          } catch (err){
+            output = null
+          }
+          
+          if(output !== null){
+            try {
+              curValues = JSON.parse(output)
+              console.log(JSON.stringify(curValues))
+            } catch (err) {
+              console.log(self.name+" Can not parse output of sensor with id "+curSensorId+" ("+self.config.sensors[curSensorId].name+"): "+output)
+              curValues = {}
+              curValues["error"] = true
+            }
+
+            if(curValues.error){
+              console.log(this.name+": Error while reading data of sensor with id "+curSensorId+" ("+self.config.sensors[curSensorId].name+")!")
+            } else {
+              if(self.config.useCelsius){
+                if(typeof curValues.temperature_c === "undefined"){
+                  if(typeof curValues.temperature_f !== "undefined"){
+                    curValues.temperature_c = (curValues.temperature_f - 32.0) / 1.8
+                    curValues["temperature"] = curValues["temperature_c"].toFixed(self.config.fractionCount)
+                  }
+                } else {
                   curValues["temperature"] = curValues["temperature_c"].toFixed(self.config.fractionCount)
                 }
               } else {
-                curValues["temperature"] = curValues["temperature_c"].toFixed(self.config.fractionCount)
-              }
-            } else {
-              if(typeof curValues.temperature_f === "undefined"){
-                if(typeof curValues.temperature_c !== "undefined"){
-                  curValues.temperature_f = (curValues.temperature_c * 1.8) + 32
+                if(typeof curValues.temperature_f === "undefined"){
+                  if(typeof curValues.temperature_c !== "undefined"){
+                    curValues.temperature_f = (curValues.temperature_c * 1.8) + 32
+                    curValues["temperature"] = curValues["temperature_f"].toFixed(self.config.fractionCount)
+                  }
+                } else {
                   curValues["temperature"] = curValues["temperature_f"].toFixed(self.config.fractionCount)
                 }
-              } else {
-                curValues["temperature"] = curValues["temperature_f"].toFixed(self.config.fractionCount)
               }
+
+              curValues["temperature_f"] = curValues["temperature_f"].toFixed(self.config.fractionCount)
+              curValues["temperature_c"] = curValues["temperature_c"].toFixed(self.config.fractionCount)
+
+              if(typeof curValues.humidity !== "undefined"){
+                curValues.humidity = curValues.humidity.toFixed(self.config.fractionCount)
+              }
+
+              self.sensorValues[curSensorId] = curValues
+              console.log(this.name+": New Values of sensor with id "+curSensorId+" ("+self.config.sensors[curSensorId].name+"): "+JSON.stringify(curValues))
             }
-
-            curValues["temperature_f"] = curValues["temperature_f"].toFixed(self.config.fractionCount)
-            curValues["temperature_c"] = curValues["temperature_c"].toFixed(self.config.fractionCount)
-
-            if(typeof curValues.humidity !== "undefined"){
-              curValues.humidity = curValues.humidity.toFixed(self.config.fractionCount)
-            }
-
-            self.sensorValues[curSensorId] = curValues
-            console.log(this.name+": New Values of sensor with id "+curSensorId+": "+JSON.stringify(curValues))
           }
+        }
+      } else {
+        if (typeof self.config.sensors[curSensorId].name !== "undefined"){
+          console.log("Re-Using value of sensor with name: "+self.config.sensors[curSensorId].name)
+        } else {
+          console.log("Re-Using value of sensor with id: "+curSensorId)
+        }
+
+        if(typeof self.sensorValuesUseCount[curSensorId] !== "undefined"){
+          self.sensorValuesUseCount[curSensorId] += 1
+        } else {
+          self.sensorValuesUseCount[curSensorId] = 1
         }
       }
     }
-    console.log("Before send: ")
-    console.log(JSON.stringify(self.sensorValues))
-    console.log(JSON.stringify(self.notificationSensors))
+
+    console.log("Sending temp update: "+JSON.stringify(self.sensorValues))
+
     self.sendSocketNotification("TEMPERATURE_UPDATE", {values: self.sensorValues})
 
     for(let curSensorId in self.notificationSensors){
       curNotiId = self.notificationSensors[curSensorId];
-      console.log("Removing values of sensor: "+curNotiId+"/"+curSensorId)
-      self.sensorValues[curNotiId] = {"error":false}
+      if (
+        (typeof self.config.sensors[curNotiId].useValuesCnt === "undefined") ||
+        (self.sensorValuesUseCount[curNotiId] >= self.config.sensors[curNotiId].useValuesCnt)
+      ){
+        if (typeof self.config.sensors[curNotiId].name !== "undefined"){
+          console.log("Removing values of sensor with name: "+self.config.sensors[curNotiId].name)
+        } else {
+          console.log("Removing values of sensor with id: "+curNotiId)
+        }
+        self.sensorValues[curNotiId] = {"error":false}
+      }
     }
-
-    // for (var curSensorNotiyId of self.notificationSensors){
-    //   console.log("Deleting element with id: "+curSensorNotiyId)
-    //   delete self.sensorValues[self.notificationSensors[curSensorNotiyId]]
-    // }
-    console.log("After send: ")
-    console.log(JSON.stringify(self.sensorValues))
   },
 
   socketNotificationReceived: function (notification, payload) {
@@ -140,6 +169,8 @@ module.exports = NodeHelper.create({
         self.sensorValues[cur_conf_id] = {"error":false}
       }
 
+      self.sensorValuesUseCount[cur_conf_id] = 0
+
       self.sensorValues[cur_conf_id]["temperature_c"] = cur_valuec
       self.sensorValues[cur_conf_id]["temperature_f"] = cur_valuef
       if(self.config.useCelsius){
@@ -157,6 +188,8 @@ module.exports = NodeHelper.create({
         self.sensorValues[cur_conf_id] = {"error":false}
       }
 
+      self.sensorValuesUseCount[cur_conf_id] = 0
+
       self.sensorValues[cur_conf_id]["temperature_c"] = cur_valuec
       self.sensorValues[cur_conf_id]["temperature_f"] = cur_valuef
 
@@ -171,6 +204,8 @@ module.exports = NodeHelper.create({
       if(typeof self.sensorValues[cur_conf_id] === "undefined"){
         self.sensorValues[cur_conf_id] = {"error":false}
       }
+
+      self.sensorValuesUseCount[cur_conf_id] = 0
 
       self.sensorValues[cur_conf_id]["humidity"] = (payload*1).toFixed(self.config.fractionCount)
     }
