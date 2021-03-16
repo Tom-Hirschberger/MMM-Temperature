@@ -105,6 +105,7 @@ This is a more complex version which uses two sensors with names. The script of 
 | name | The name of the sensor (if an name should be displayed) | false |
 | script | The script to call to get the values of the sensor. If not present the default script is used | false |
 | args | The arguments to pass to the script | false |
+| notificationId | If no script should be called but the values get send via notification (i.e. because of use of the MQTTBridge module) specify the identifier at the end of the notifications here (i.e. if the notification "TEMPERATURE_C_ESP_DEV" is send the notificationId is "ESP_DEV"). | false |
 | temperatureHigh | Specify a value of which temperature will be marked as high (in default displayed as red) | Float | 1000 |
 | temperatureLow | Specify a value of which temperature will be marked as low (in default displayed as red) | Float | -1000 |
 | showTemperature | Controls if the temperature will be displayed for THIS sensor | Boolean | true |
@@ -333,3 +334,4 @@ You can provide your values via notification. Make sure to send new values more 
 | TEMPERATURE_C_SENSOR_ID | Updates the temperature in degree celcius value of the sensor with id "SENSOR_ID". | The current value as floating point or integer number |
 | TEMPERATURE_F_SENSOR_ID | Updates the temperature in degree fahrenheit value of the sensor with id "SENSOR_ID". | The current value as floating point or integer number |
 | HUMIDITY_SENSOR_ID | Updates the humidity value of the sensor with id "SENSOR_ID". | The current value as floating point or integer number |
+| TEMPERATURE_VALUES_SENSOR_ID | Send the data as json with the keys "temperature_c", "temperature_f" and "humidity". All values (which are present in the json) of the sensor with id "SENSOR_ID" will be updated. | A json object |

@@ -268,6 +268,7 @@ Module.register('MMM-Temperature', {
     const self = this
     if (notification.startsWith("TEMPERATURE_C_") ||
         notification.startsWith("TEMPERATURE_F_") ||
+        notification.startsWith("TEMPERATURE_VALUES_") ||
         notification.startsWith("HUMIDITY_")
     ){
       self.sendSocketNotification(notification, payload)

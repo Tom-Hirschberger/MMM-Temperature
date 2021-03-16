@@ -181,7 +181,7 @@ module.exports = NodeHelper.create({
     } else if (notification.startsWith("TEMPERATURE_F_")){
       cur_id = notification.substring(14)
       cur_valuef = payload
-      cur_valuec = (cur_valuef - 32) / 1.8
+      cur_valuec = ((cur_valuef - 32) / 1.8).toFixed(self.config.fractionCount)
 
       cur_conf_id = self.notificationSensors[cur_id]
       if(typeof self.sensorValues[cur_conf_id] === "undefined"){
@@ -208,6 +208,63 @@ module.exports = NodeHelper.create({
       self.sensorValuesUseCount[cur_conf_id] = 0
 
       self.sensorValues[cur_conf_id]["humidity"] = (payload*1).toFixed(self.config.fractionCount)
+    } else if (notification.startsWith("TEMPERATURE_VALUES_")){
+      cur_id = notification.substring(19)
+
+      cur_conf_id = self.notificationSensors[cur_id]
+      if(typeof self.sensorValues[cur_conf_id] === "undefined"){
+        self.sensorValues[cur_conf_id] = {"error":false}
+      }
+
+      self.sensorValuesUseCount[cur_conf_id] = 0
+
+      try {
+        curValues = JSON.parse(payload)
+        for (var key in curValues){
+          curValues[key.toLowerCase()] = curValues[key]
+        }
+        
+        if (typeof curValues["humidity"] !== "undefined"){
+          self.sensorValues[cur_conf_id]["humidity"] = (curValues["humidity"]*1).toFixed(self.config.fractionCount)
+        } else {
+          delete(self.sensorValues[cur_conf_id]["humidity"])
+        }
+        
+        if (typeof curValues["temperature_c"] !== "undefined"){
+          self.sensorValues[cur_conf_id]["temperature_c"] = (curValues["temperature_c"]*1).toFixed(self.config.fractionCount)
+          if (! ("temperature_f" in curValues)){
+            self.sensorValues[cur_conf_id]["temperature_f"] = ((self.sensorValues[cur_conf_id]["temperature_c"] * 1.8) + 32).toFixed(self.config.fractionCount)
+          }
+          if(self.config.useCelsius){
+            self.sensorValues[cur_conf_id]["temperature"] = self.sensorValues[cur_conf_id]["temperature_c"]
+          } else {
+            self.sensorValues[cur_conf_id]["temperature"] = self.sensorValues[cur_conf_id]["temperature_f"]
+          }
+        } else {
+          delete(self.sensorValues[cur_conf_id]["temperature_c"])
+        }
+
+        if (typeof curValues["temperature_f"] !== "undefined"){
+          self.sensorValues[cur_conf_id]["temperature_f"] = (curValues["temperature_f"]*1).toFixed(self.config.fractionCount)
+          if (! ("temperature_c" in curValues)){
+            self.sensorValues[cur_conf_id]["temperature_c"] = ((self.sensorValues[cur_conf_id]["temperature_f"] - 32) / 1.8).toFixed(self.config.fractionCount)
+          }
+          if(self.config.useCelsius){
+            self.sensorValues[cur_conf_id]["temperature"] = self.sensorValues[cur_conf_id]["temperature_c"]
+          } else {
+            self.sensorValues[cur_conf_id]["temperature"] = self.sensorValues[cur_conf_id]["temperature_f"]
+          }
+        } else {
+          delete(self.sensorValues[cur_conf_id]["temperature_f"])
+        }
+      } catch (err) {
+        console.log(self.name+" Can not parse output of notification of sensor with id "+cur_conf_id+" ("+self.config.sensors[cur_conf_id].name+"): "+payload)
+        console.log(err)
+        self.sensorValues[cur_conf_id] = {}
+        self.sensorValues[cur_conf_id]["error"] = true
+      }
+
+      
     }
     else {
       console.log(this.name + ': Received Notification: ' + notification)
