@@ -5,9 +5,11 @@
  
 const char* SSID = "ENTER_WIFI_SSID_HERE";
 const char* PSK = "ENTER_WIFI_PASSWORD_HERE";
-const char* MQTT_BROKER = "ENTER_MQTT_SERVER_ADDRESS_HERE";
-const char* MQTT_USER = "ENTER_MQTT_USERNAME_HERE";
-const char* MQTT_PASS = "ENTER_MQTT_PASSWORD_HERE";
+const char* mqtt_broker = "ENTER_MQTT_ADDRESS_HERE";
+const char* mqtt_user = "ENTER_MQTT_USER_HERE";
+const char* mqtt_pass = "ENTER_MQTT_PASS_HERE";
+const String client_name = "ENTER_MQTT_CLIENT_NAME_HERE";
+const String topic_id = "ENTER_MQTT_TOPIC_HERE";
 long interval = 10000;
  
 WiFiClient espClient;
@@ -23,7 +25,7 @@ float temperature, humidity;
 void setup() {
     Serial.begin(115200);
     setup_wifi();
-    client.setServer(MQTT_BROKER, 1883);
+    client.setServer(mqtt_broker, 1883);
     reconnect();
     bme.begin(0x76);
 }
@@ -59,16 +61,23 @@ void setup_wifi() {
 }
  
 void reconnect() {
-    while (!client.connected()) {
-        Serial.println("Reconnecting...");
-        if (!client.connect("ESP_TEMP", MQTT_USER, MQTT_PASS)) {
-            Serial.print("failed, rc=");
-            Serial.print(client.state());
-            Serial.println(" retrying in 5 seconds");
-            delay(5000);
-        }
+    // Loop until we're reconnected
+  while (!client.connected()) {
+    Serial.print("Attempting MQTT connection...");
+    // Attempt to connect
+    if (client.connect(client_name.c_str(), mqtt_user, mqtt_pass)) {
+      Serial.println("connected");
+    } else {
+      Serial.print("failed, rc=");
+      Serial.print(client.state());
+      Serial.println(" try again in 5 seconds");
+      // Wait 5 seconds before retrying
+      delay(5000);
     }
+  }
 }
+
+
 void loop() {
     if (WiFi.status() != WL_CONNECTED) {
       setup_wifi();
@@ -84,7 +93,7 @@ void loop() {
 
     Serial.println("Publishing new values!");
     
-    client.publish("esp_temp/temperature_c", String(temperature).c_str());
-    client.publish("esp_temp/humidity", String(humidity).c_str());
+    client.publish((topic_id+"/temperature_c").c_str(), String(temperature).c_str());
+    client.publish((topic_id+"/humidity").c_str(), String(humidity).c_str());
     delay(interval);
 }
