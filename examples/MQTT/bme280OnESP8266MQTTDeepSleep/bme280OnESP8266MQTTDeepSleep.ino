@@ -5,10 +5,12 @@
  
 const char* SSID = "ENTER_WIFI_SSID_HERE";
 const char* PSK = "ENTER_WIFI_PASSWORD_HERE";
-const char* MQTT_BROKER = "ENTER_MQTT_BROKER_IP_OR_HOSTNAME_HERE";
-const char* MQTT_USER = "ENTER_MQTT_USERNAME_HERE";
-const char* MQTT_PASS = "ENTER_MQTT_PASSWORD_HERE";
-long interval = 600; //how often should the values be send (seconds)
+const char* mqtt_broker = "ENTER_MQTT_ADDRESS_HERE";
+const char* mqtt_user = "ENTER_MQTT_USER_HERE";
+const char* mqtt_pass = "ENTER_MQTT_PASS_HERE";
+const String client_name = "ENTER_MQTT_CLIENT_NAME_HERE";
+const String topic_id = "ENTER_MQTT_TOPIC_HERE";
+long interval = 1800; //how often should the values be send (seconds)
  
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -23,7 +25,7 @@ float temperature, humidity;
 void setup() {
     Serial.begin(115200);
     setup_wifi();
-    client.setServer(MQTT_BROKER, 1883);
+    client.setServer(mqtt_broker, 1883);
 }
  
 void setup_wifi() {
@@ -50,7 +52,7 @@ void setup_wifi() {
 void reconnect() {
     while (!client.connected()) {
         Serial.print("Reconnecting...");
-        if (!client.connect("ESP_DEV", MQTT_USER, MQTT_PASS)) {
+        if (!client.connect(client_name.c_str(), mqtt_user, mqtt_pass)) {
             Serial.print("failed, rc=");
             Serial.print(client.state());
             Serial.println(" retrying in 5 seconds");
@@ -70,8 +72,8 @@ void loop() {
 
     Serial.println("Publishing new values!");
     
-    client.publish("esp_dev/temperature_c", String(temperature).c_str());
-    client.publish("esp_dev/humidity", String(humidity).c_str());
+    client.publish((topic_id+"/temperature_c").c_str(), String(temperature).c_str());
+    client.publish((topic_id+"/humidity").c_str(), String(humidity).c_str());
     delay(1000);
     startDeepSleep();
 }
