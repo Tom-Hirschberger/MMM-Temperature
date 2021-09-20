@@ -208,6 +208,66 @@ module.exports = NodeHelper.create({
       self.sensorValuesUseCount[cur_conf_id] = 0
 
       self.sensorValues[cur_conf_id]["humidity"] = (payload*1).toFixed(self.config.fractionCount)
+    } else if (notification.startsWith("WIND_SPEED_AVG_")){
+      cur_id = notification.substring(15)
+      cur_conf_id = self.notificationSensors[cur_id]
+      if(typeof self.sensorValues[cur_conf_id] === "undefined"){
+        self.sensorValues[cur_conf_id] = {"error":false}
+      }
+
+      self.sensorValuesUseCount[cur_conf_id] = 0
+
+      self.sensorValues[cur_conf_id]["wind_avg_m_s"] = payload
+    } else if (notification.startsWith("WIND_SPEED_MAX_")){
+      cur_id = notification.substring(15)
+      cur_conf_id = self.notificationSensors[cur_id]
+      if(typeof self.sensorValues[cur_conf_id] === "undefined"){
+        self.sensorValues[cur_conf_id] = {"error":false}
+      }
+
+      self.sensorValuesUseCount[cur_conf_id] = 0
+
+      self.sensorValues[cur_conf_id]["wind_max_m_s"] = payload
+    } else if (notification.startsWith("WIND_DIRECTION_")){
+      cur_id = notification.substring(15)
+      cur_conf_id = self.notificationSensors[cur_id]
+      if(typeof self.sensorValues[cur_conf_id] === "undefined"){
+        self.sensorValues[cur_conf_id] = {"error":false}
+      }
+
+      self.sensorValuesUseCount[cur_conf_id] = 0
+
+      self.sensorValues[cur_conf_id]["wind_dir_deg"] = payload
+    } else if (notification.startsWith("RAIN_")){
+      cur_id = notification.substring(5)
+      cur_conf_id = self.notificationSensors[cur_id]
+      if(typeof self.sensorValues[cur_conf_id] === "undefined"){
+        self.sensorValues[cur_conf_id] = {"error":false}
+      }
+
+      self.sensorValuesUseCount[cur_conf_id] = 0
+
+      self.sensorValues[cur_conf_id]["rain_mm"] = payload
+    } else if (notification.startsWith("UV_")){
+      cur_id = notification.substring(3)
+      cur_conf_id = self.notificationSensors[cur_id]
+      if(typeof self.sensorValues[cur_conf_id] === "undefined"){
+        self.sensorValues[cur_conf_id] = {"error":false}
+      }
+
+      self.sensorValuesUseCount[cur_conf_id] = 0
+
+      self.sensorValues[cur_conf_id]["uv"] = payload
+    } else if (notification.startsWith("LIGHT_")){
+      cur_id = notification.substring(6)
+      cur_conf_id = self.notificationSensors[cur_id]
+      if(typeof self.sensorValues[cur_conf_id] === "undefined"){
+        self.sensorValues[cur_conf_id] = {"error":false}
+      }
+
+      self.sensorValuesUseCount[cur_conf_id] = 0
+
+      self.sensorValues[cur_conf_id]["light_lux"] = payload
     } else if (notification.startsWith("TEMPERATURE_VALUES_")){
       cur_id = notification.substring(19)
 
@@ -256,6 +316,48 @@ module.exports = NodeHelper.create({
           }
         } else {
           delete(self.sensorValues[cur_conf_id]["temperature_f"])
+        }
+
+        if (typeof curValues["wind_avg_m_s"] !== "undefined"){
+          self.sensorValues[cur_conf_id]["wind_avg_m_s"] = curValues["wind_avg_m_s"]
+        } else {
+          delete(self.sensorValues[cur_conf_id]["wind_avg_m_s"])
+        }
+
+        if (typeof curValues["wind_max_m_s"] !== "undefined"){
+          self.sensorValues[cur_conf_id]["wind_max_m_s"] = curValues["wind_max_m_s"]
+        } else {
+          delete(self.sensorValues[cur_conf_id]["wind_max_m_s"])
+        }
+
+        if (typeof curValues["wind_dir_deg"] !== "undefined"){
+          self.sensorValues[cur_conf_id]["wind_dir_deg"] = curValues["wind_dir_deg"]
+        } else {
+          delete(self.sensorValues[cur_conf_id]["wind_dir_deg"])
+        }
+
+        if (typeof curValues["rain_mm"] !== "undefined"){
+          self.sensorValues[cur_conf_id]["rain_mm"] = curValues["rain_mm"]
+        } else {
+          delete(self.sensorValues[cur_conf_id]["rain_mm"])
+        }
+
+        if (typeof curValues["rain_mm"] !== "undefined"){
+          self.sensorValues[cur_conf_id]["rain_mm"] = curValues["rain_mm"]
+        } else {
+          delete(self.sensorValues[cur_conf_id]["rain_mm"])
+        }
+
+        if (typeof curValues["uv"] !== "undefined"){
+          self.sensorValues[cur_conf_id]["uv"] = curValues["uv"]
+        } else {
+          delete(self.sensorValues[cur_conf_id]["uv"])
+        }
+
+        if (typeof curValues["light_lux"] !== "undefined"){
+          self.sensorValues[cur_conf_id]["light_lux"] = curValues["light_lux"]
+        } else {
+          delete(self.sensorValues[cur_conf_id]["light_lux"])
         }
       } catch (err) {
         console.log(self.name+" Can not parse output of notification of sensor with id "+cur_conf_id+" ("+self.config.sensors[cur_conf_id].name+"): "+payload)

@@ -95,8 +95,22 @@ This is a more complex version which uses two sensors with names. The script of 
 | temperatureLow | Specify a value of which temperature will be marked as low (in default displayed as red) | Float | -1000 |
 | humidityHigh | Specify a value of which humidity will be marked as high (in default displayed as red) | Float | 101 |
 | humidityLow | Specify a value of which humidity will be marked as low (in default displayed as red) | Float | -1 |
+| windAvgHigh | Specify a value of which the average wind speed will be marked as high (in default displayed as red) | Float | 60 |
+| windAvgLow | Specify a value of which the average wind speed will be marked as low (in default displayed as red) | Float | -1 |
+| windMaxHigh | Specify a value of which maximum wind speed will be marked as high (in default displayed as red) | Float | 60 |
+| windMaxLow | Specify a value of which maximum wind speed will be marked as low (in default displayed as red) | Float | -1 |
+| uvHigh | Specify a value of which the uv value will be marked as high (in default displayed as red) | Float | 200 |
+| uvLow | Specify a value of which uv value will be marked as low (in default displayed as red) | Float | -1 |
+| rainHigh | Specify a value of which rain value will be marked as high (in default displayed as red) | Float | 300 |
+| rainLow | Specify a value of which rain value will be marked as low (in default displayed as red) | Float | -1 |
+| lightHigh | Specify a value of which light value will be marked as high (in default displayed as red) | Float | 80000 |
+| lightLow | Specify a value of which light value will be marked as low (in default displayed as red) | Float | -1 |
 | showTemperature | Controls if the temperature will be displayed for the sensors (can be overriden at each sensor) | Boolean | true |
 | showHumidity | Controls if the humidity will be displayed for the sensors (can be overriden at each sensor) | Boolean | true |
+| showWind | Controls if the wind values will be displayed for the sensors (can be overriden at each sensor) | Boolean | true |
+| showRain | Controls if the rain value will be displayed for the sensors (can be overriden at each sensor) | Boolean | true |
+| showUv | Controls if the UV value will be displayed for the sensors (can be overriden at each sensor) | Boolean | true |
+| showLight | Controls if the light value will be displayed for the sensors (can be overriden at each sensor) | Boolean | true |
 | sensors | The array containing the configuration of the different sensors | Array | [] |
 
 ### Sensors ###
@@ -110,8 +124,22 @@ This is a more complex version which uses two sensors with names. The script of 
 | temperatureLow | Specify a value of which temperature will be marked as low (in default displayed as red) | Float | -1000 |
 | showTemperature | Controls if the temperature will be displayed for THIS sensor | Boolean | true |
 | showHumidity | Controls if the humidity will be displayed for THIS sensor | Boolean | true |
+| showWind | Controls if the wind values will be displayed for THIS sensor | Boolean | true |
+| showRain | Controls if the rain value will be displayed for THIS sensor | Boolean | true |
+| showUv | Controls if the UV value will be displayed for THIS sensor | Boolean | true |
+| showLight | Controls if the light value will be displayed for THIS sensor | Boolean | true |
 | humidityHigh | Specify a value of which humidity will be marked as high (in default displayed as red) | Float | 101 |
 | humidityLow | Specify a value of which humidity will be marked as low (in default displayed as red) | Float | -1 |
+| windAvgHigh | Specify a value of which the average wind speed will be marked as high (in default displayed as red) | Float | 60 |
+| windAvgLow | Specify a value of which the average wind speed will be marked as low (in default displayed as red) | Float | -1 |
+| windMaxHigh | Specify a value of which maximum wind speed will be marked as high (in default displayed as red) | Float | 60 |
+| windMaxLow | Specify a value of which maximum wind speed will be marked as low (in default displayed as red) | Float | -1 |
+| uvHigh | Specify a value of which the uv value will be marked as high (in default displayed as red) | Float | 200 |
+| uvLow | Specify a value of which uv value will be marked as low (in default displayed as red) | Float | -1 |
+| rainHigh | Specify a value of which rain value will be marked as high (in default displayed as red) | Float | 300 |
+| rainLow | Specify a value of which rain value will be marked as low (in default displayed as red) | Float | -1 |
+| lightHigh | Specify a value of which light value will be marked as high (in default displayed as red) | Float | 80000 |
+| lightLow | Specify a value of which light value will be marked as low (in default displayed as red) | Float | -1 |
 | useValuesCnt | Normally a sensors values get updated each time the updateInterval is reached. If you want to re-use the values a couple of times (i.e. if the sensor is connected via MQTT and does not send new values that often) you can specify a number of how often the values should be used. | Integer | undefined |
   
 **The temperature and humidity high and low values and the showTemperature and showHumdity values configured at sensors will override the global configured ones!**
@@ -334,4 +362,10 @@ You can provide your values via notification. Make sure to send new values more 
 | TEMPERATURE_C_SENSOR_ID | Updates the temperature in degree celcius value of the sensor with id "SENSOR_ID". | The current value as floating point or integer number |
 | TEMPERATURE_F_SENSOR_ID | Updates the temperature in degree fahrenheit value of the sensor with id "SENSOR_ID". | The current value as floating point or integer number |
 | HUMIDITY_SENSOR_ID | Updates the humidity value of the sensor with id "SENSOR_ID". | The current value as floating point or integer number |
+| WIND_SPEED_MAX_SENSOR_ID | Updates the maximum wind speed value of the sensor with id "SENSOR_ID". | The current value as floating point or integer number |
+| WIND_SPEED_AVG_SENSOR_ID | Updates the average wind speed value of the sensor with id "SENSOR_ID". | The current value as floating point or integer number |
+| WIND_DIRECTION_SENSOR_ID | Updates the wind direction value of the sensor with id "SENSOR_ID". | The current value as floating point or integer number |
+| RAIN_SENSOR_ID | Updates the rain value of the sensor with id "SENSOR_ID". | The current value as floating point or integer number |
+| UV_SENSOR_ID | Updates the UV value of the sensor with id "SENSOR_ID". | The current value as floating point or integer number |
+| LIGHT_SENSOR_ID | Updates the light value of the sensor with id "SENSOR_ID". | The current value as floating point or integer number |
 | TEMPERATURE_VALUES_SENSOR_ID | Send the data as json with the keys "temperature_c", "temperature_f" and "humidity". All values (which are present in the json) of the sensor with id "SENSOR_ID" will be updated. | A json object |
