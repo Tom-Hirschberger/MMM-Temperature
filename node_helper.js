@@ -389,7 +389,7 @@ module.exports = NodeHelper.create({
       }
 
       // console.log("Saved new values of id: "+cur_id)
-      // console.log(JSON.stringify(self.sensorValues[cur_id]))
+      // console.log(JSON.stringify(self.sensorValues[cur_conf_id]))
       
     }
     else {
