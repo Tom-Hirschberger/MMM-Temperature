@@ -111,9 +111,10 @@ module.exports = NodeHelper.create({
               console.log(this.name+": New Values of sensor with id "+curSensorId+" ("+self.config.sensors[curSensorId].name+"): "+JSON.stringify(curValues))
             }
           }
-        } else {
-          console.log("Skipping sensor with id: "+curSensorId+ " because it is an notification based sensor!")
-        }
+        } 
+        // else {
+        //   console.log("Skipping sensor with id: "+curSensorId+ " because it is an notification based sensor!")
+        // }
       } else {
         if (typeof self.config.sensors[curSensorId].name !== "undefined"){
           console.log("Re-Using value of sensor with name: "+self.config.sensors[curSensorId].name)
@@ -283,26 +284,26 @@ module.exports = NodeHelper.create({
       try {
         curValues = JSON.parse(payload)
 
-        console.log("Parsed values: ")
-        console.log(JSON.stringify(curValues))
+        // console.log("Parsed values: ")
+        // console.log(JSON.stringify(curValues))
 
         for (var key in curValues){
           curValues[key.toLowerCase()] = curValues[key]
         }
 
-        console.log("Parsed values after lowerCase transform: ")
-        console.log(JSON.stringify(curValues))
+        // console.log("Parsed values after lowerCase transform: ")
+        // console.log(JSON.stringify(curValues))
         
         if (typeof curValues["humidity"] !== "undefined"){
-          console.log("Updating humidity")
+          // console.log("Updating humidity")
           self.sensorValues[cur_conf_id]["humidity"] = (curValues["humidity"]*1).toFixed(self.config.fractionCount)
         } else {
-          console.log("Missing humidity")
+          // console.log("Missing humidity")
           delete(self.sensorValues[cur_conf_id]["humidity"])
         }
         
         if (typeof curValues["temperature_c"] !== "undefined"){
-          console.log("Updating temperature_c")
+          // console.log("Updating temperature_c")
           self.sensorValues[cur_conf_id]["temperature_c"] = (curValues["temperature_c"]*1).toFixed(self.config.fractionCount)
           if (! ("temperature_f" in curValues)){
             self.sensorValues[cur_conf_id]["temperature_f"] = ((self.sensorValues[cur_conf_id]["temperature_c"] * 1.8) + 32).toFixed(self.config.fractionCount)
@@ -313,12 +314,12 @@ module.exports = NodeHelper.create({
             self.sensorValues[cur_conf_id]["temperature"] = self.sensorValues[cur_conf_id]["temperature_f"]
           }
         } else {
-          console.log("Missing temperature_c")
+          // console.log("Missing temperature_c")
           delete(self.sensorValues[cur_conf_id]["temperature_c"])
         }
 
         if (typeof curValues["temperature_f"] !== "undefined"){
-          console.log("Updating temperature_f")
+          // console.log("Updating temperature_f")
           self.sensorValues[cur_conf_id]["temperature_f"] = (curValues["temperature_f"]*1).toFixed(self.config.fractionCount)
           if (! ("temperature_c" in curValues)){
             self.sensorValues[cur_conf_id]["temperature_c"] = ((self.sensorValues[cur_conf_id]["temperature_f"] - 32) / 1.8).toFixed(self.config.fractionCount)
@@ -329,55 +330,55 @@ module.exports = NodeHelper.create({
             self.sensorValues[cur_conf_id]["temperature"] = self.sensorValues[cur_conf_id]["temperature_f"]
           }
         } else {
-          console.log("Missing temperature_f")
+          // console.log("Missing temperature_f")
           delete(self.sensorValues[cur_conf_id]["temperature_f"])
         }
 
         if (typeof curValues["wind_avg_m_s"] !== "undefined"){
-          console.log("Updating wind_avg_m_s")
+          // console.log("Updating wind_avg_m_s")
           self.sensorValues[cur_conf_id]["wind_avg_m_s"] = (curValues["wind_avg_m_s"]*1).toFixed(self.config.fractionCount)
         } else {
-          console.log("Missing wind_avg_m_s")
+          // console.log("Missing wind_avg_m_s")
           delete(self.sensorValues[cur_conf_id]["wind_avg_m_s"])
         }
 
         if (typeof curValues["wind_max_m_s"] !== "undefined"){
-          console.log("Updating wind_max_m_s")
+          // console.log("Updating wind_max_m_s")
           self.sensorValues[cur_conf_id]["wind_max_m_s"] = (curValues["wind_max_m_s"]*1).toFixed(self.config.fractionCount)
         } else {
-          console.log("Missing wind_max_m_s")
+          // console.log("Missing wind_max_m_s")
           delete(self.sensorValues[cur_conf_id]["wind_max_m_s"])
         }
 
         if (typeof curValues["wind_dir_deg"] !== "undefined"){
-          console.log("Updating wind_dir_deg")
+          // console.log("Updating wind_dir_deg")
           self.sensorValues[cur_conf_id]["wind_dir_deg"] = curValues["wind_dir_deg"]
         } else {
-          console.log("Missing wind_dir_deg")
+          // console.log("Missing wind_dir_deg")
           delete(self.sensorValues[cur_conf_id]["wind_dir_deg"])
         }
 
         if (typeof curValues["rain_mm"] !== "undefined"){
-          console.log("Updating rain_mm")
+          // console.log("Updating rain_mm")
           self.sensorValues[cur_conf_id]["rain_mm"] = (curValues["rain_mm"]*1).toFixed(self.config.fractionCount)
         } else {
-          console.log("Missing rain_mm")
+          // console.log("Missing rain_mm")
           delete(self.sensorValues[cur_conf_id]["rain_mm"])
         }
 
         if (typeof curValues["uv"] !== "undefined"){
-          console.log("Updating uv")
+          // console.log("Updating uv")
           self.sensorValues[cur_conf_id]["uv"] = curValues["uv"]
         } else {
-          console.log("Missing uv")
+          // console.log("Missing uv")
           delete(self.sensorValues[cur_conf_id]["uv"])
         }
 
         if (typeof curValues["light_lux"] !== "undefined"){
-          console.log("Updating light_lux")
+          // console.log("Updating light_lux")
           self.sensorValues[cur_conf_id]["light_lux"] = curValues["light_lux"]
         } else {
-          console.log("Missing light_lux")
+          // console.log("Missing light_lux")
           delete(self.sensorValues[cur_conf_id]["light_lux"])
         }
       } catch (err) {
@@ -387,8 +388,8 @@ module.exports = NodeHelper.create({
         self.sensorValues[cur_conf_id]["error"] = true
       }
 
-      console.log("Saved new values of id: "+cur_id)
-      console.log(JSON.stringify(self.sensorValues[cur_id]))
+      // console.log("Saved new values of id: "+cur_id)
+      // console.log(JSON.stringify(self.sensorValues[cur_id]))
       
     }
     else {
