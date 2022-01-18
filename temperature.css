@@ -19,7 +19,13 @@
     font-size: 0px;
 }
 
-.temperatureRootWrapper .name, .temperatureRootWrapper .temperature, .temperatureRootWrapper .humidity {
+.temperatureRootWrapper .name, .temperatureRootWrapper .temperature, .temperatureRootWrapper .humidity 
+, .temperatureRootWrapper .wind-avg
+, .temperatureRootWrapper .wind-max
+, .temperatureRootWrapper .wind-dir
+, .temperatureRootWrapper .rain
+, .temperatureRootWrapper .uv
+, .temperatureRootWrapper .light{
     margin: 5px;
 }
 
@@ -39,7 +45,15 @@
     min-width: calc(100% - 10px);
 }
 
-.temperatureRootWrapper .temperatureWrapper, .temperatureRootWrapper .humidityWrapper {
+.temperatureRootWrapper .temperatureWrapper
+, .temperatureRootWrapper .humidityWrapper
+, .temperatureRootWrapper .windAvgWrapper
+, .temperatureRootWrapper .windMaxWrapper
+, .temperatureRootWrapper .windDirWrapper
+, .temperatureRootWrapper .rainWrapper
+, .temperatureRootWrapper .uVWrapper
+, .temperatureRootWrapper .lightWrapper
+{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
