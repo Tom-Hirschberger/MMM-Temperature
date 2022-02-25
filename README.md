@@ -204,6 +204,11 @@ The config to get the data into the module is really simple because the on nearl
 ```
 
 ### BME280 ###
+If you are unsure which I2C address is used by your sensor you can either run 
+```
+sudo i2cdetect -y 1
+```
+or you can try some well known ones (0x76, 0x77).
 If your BME280 uses I2C address 0x76 (as most of my sensors do) you can run the script without any options:
 ```json5
 
