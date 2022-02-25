@@ -204,6 +204,7 @@ The config to get the data into the module is really simple because the on nearl
 ```
 
 ### BME280 ###
+If your BME280 uses I2C address 0x76 (as most of my sensors do) you can run the script without any options:
 ```json5
 
 		{
@@ -214,6 +215,25 @@ The config to get the data into the module is really simple because the on nearl
 					{
 					    name: "Sensor One",
 					    script: "bme280",
+					},
+				]
+			},
+		},
+
+```
+
+If your sensor uses an different address you can specify it as an commandline option (i.e. 0x77):
+```json5
+
+		{
+			module: "MMM-Temperature",
+			position: "bottom_right",
+			config: {
+				sensors: [
+					{
+					    name: "Sensor One",
+					    script: "bme280",
+						args: "0x77",
 					},
 				]
 			},
