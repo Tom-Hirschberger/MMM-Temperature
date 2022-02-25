@@ -87,7 +87,7 @@ This is a more complex version which uses two sensors with names. The script of 
 | updateInterval | How often should the values be updated (in seconds) | Integer | 60 |
 | useCelsius | If set to true the °C value is used °F otherwise | Boolean | true |
 | temperatureText | The text displayed before the temperature value | String | "Temperature:" |
-| humidityText | The text displayed before the humidity value | String | "Huidity:" |
+| humidityText | The text displayed before the humidity value | String | "Humidity:" |
 | fractionCount | How many decimal places should be displayed after the "." | Integer | 1 |
 | defaultScript | The script which is used to get the values of sensors with no own script option | String | "htu21" |
 | defaultArgs | The arguments of the default script | String | "" |
@@ -204,6 +204,7 @@ The config to get the data into the module is really simple because the on nearl
 ```
 
 ### BME280 ###
+If your BME280 uses I2C address 0x76 (as most of my sensors do) you can run the script without any options:
 ```json5
 
 		{
@@ -214,6 +215,25 @@ The config to get the data into the module is really simple because the on nearl
 					{
 					    name: "Sensor One",
 					    script: "bme280",
+					},
+				]
+			},
+		},
+
+```
+
+If your sensor uses an different address you can specify it as an commandline option (i.e. 0x77):
+```json5
+
+		{
+			module: "MMM-Temperature",
+			position: "bottom_right",
+			config: {
+				sensors: [
+					{
+					    name: "Sensor One",
+					    script: "bme280",
+						args: "0x77",
 					},
 				]
 			},
