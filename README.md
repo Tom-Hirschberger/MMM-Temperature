@@ -87,7 +87,7 @@ This is a more complex version which uses two sensors with names. The script of 
 | updateInterval | How often should the values be updated (in seconds) | Integer | 60 |
 | useCelsius | If set to true the °C value is used °F otherwise | Boolean | true |
 | temperatureText | The text displayed before the temperature value | String | "Temperature:" |
-| humidityText | The text displayed before the humidity value | String | "Huidity:" |
+| humidityText | The text displayed before the humidity value | String | "Humidity:" |
 | fractionCount | How many decimal places should be displayed after the "." | Integer | 1 |
 | defaultScript | The script which is used to get the values of sensors with no own script option | String | "htu21" |
 | defaultArgs | The arguments of the default script | String | "" |
