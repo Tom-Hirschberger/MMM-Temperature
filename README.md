@@ -1,6 +1,12 @@
 # MMM-Temperature ##
 This module reads temperature of different sensors (default HTU21D) with external scripts and displays the values.
 
+:warning: **You may want to use [MMM-ValuesByNotification](https://github.com/Tom-Hirschberger/MMM-ValuesByNotification) instead of this module and [MMM-CommandToNotification](https://github.com/Tom-Hirschberger/MMM-CommandToNotification) to deliver the data of sensor.  
+I will provide bugfixes for this module but there will be no new features!**
+
+The new modules provide a lot of flexabilty but my be hard to configure in the first moment.
+
+
 ## Screenshots ##
 ![alt text](https://github.com/Tom-Hirschberger/MMM-Temperature/raw/master/examples/threeSensorsOneNameless.png "Three Sensors")
 
