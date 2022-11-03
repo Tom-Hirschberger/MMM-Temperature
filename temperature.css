@@ -1,5 +1,5 @@
 
-.temperatureRootWrapper{
+.MMM-Temperature .temperatureRootWrapper{
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -7,7 +7,7 @@
     align-items: flex-start;
 }
 
-.temperatureRootWrapper .sensor {
+.MMM-Temperature .temperatureRootWrapper .sensor {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -19,40 +19,45 @@
     font-size: 0px;
 }
 
-.temperatureRootWrapper .name, .temperatureRootWrapper .temperature, .temperatureRootWrapper .humidity 
-, .temperatureRootWrapper .wind-avg
-, .temperatureRootWrapper .wind-max
-, .temperatureRootWrapper .wind-dir
-, .temperatureRootWrapper .rain
-, .temperatureRootWrapper .uv
-, .temperatureRootWrapper .light{
+.MMM-Temperature .temperatureRootWrapper .name, 
+.MMM-Temperature .temperatureRootWrapper .temperature, 
+.MMM-Temperature .temperatureRootWrapper .humidity ,
+.MMM-Temperature  .temperatureRootWrapper .wind-avg, 
+.MMM-Temperature .temperatureRootWrapper .wind-max, 
+.MMM-Temperature .temperatureRootWrapper .wind-dir, 
+.MMM-Temperature .temperatureRootWrapper .rain, 
+.MMM-Temperature .temperatureRootWrapper .uv, 
+.MMM-Temperature .temperatureRootWrapper .light{
     margin: 5px;
 }
 
-.temperatureRootWrapper .nameWrapper, .temperatureRootWrapper .description, .temperatureRootWrapper .value, .temperatureRootWrapper .unit {
+.MMM-Temperature .temperatureRootWrapper .nameWrapper, 
+.MMM-Temperature .temperatureRootWrapper .description, 
+.MMM-Temperature .temperatureRootWrapper .value, 
+.MMM-Temperature .temperatureRootWrapper .unit {
     font-size: 20px;
     line-height: 20px;
 }
 
-.temperatureRootWrapper .name {
+.MMM-Temperature .temperatureRootWrapper .name {
     text-align: center;
 }
 
-.temperatureRootWrapper .sensorWrapper {
+.MMM-Temperature .temperatureRootWrapper .sensorWrapper {
     font-size: 0px;
     margin: 5px;
     background-color: black;
     min-width: calc(100% - 10px);
 }
 
-.temperatureRootWrapper .temperatureWrapper
-, .temperatureRootWrapper .humidityWrapper
-, .temperatureRootWrapper .windAvgWrapper
-, .temperatureRootWrapper .windMaxWrapper
-, .temperatureRootWrapper .windDirWrapper
-, .temperatureRootWrapper .rainWrapper
-, .temperatureRootWrapper .uVWrapper
-, .temperatureRootWrapper .lightWrapper
+.MMM-Temperature .temperatureRootWrapper .temperatureWrapper, 
+.MMM-Temperature .temperatureRootWrapper .humidityWrapper, 
+.MMM-Temperature .temperatureRootWrapper .windAvgWrapper, 
+.MMM-Temperature .temperatureRootWrapper .windMaxWrapper, 
+.MMM-Temperature .temperatureRootWrapper .windDirWrapper, 
+.MMM-Temperature .temperatureRootWrapper .rainWrapper, 
+.MMM-Temperature .temperatureRootWrapper .uVWrapper, 
+.MMM-Temperature .temperatureRootWrapper .lightWrapper
 {
     display: flex;
     flex-direction: row;
@@ -60,11 +65,11 @@
     flex-wrap: nowrap;
 }
 
-.temperatureRootWrapper .description {
+.MMM-Temperature .temperatureRootWrapper .description {
     margin-right: 10px;
 }
 
-.temperatureRootWrapper .valueWrapper {
+.MMM-Temperature .temperatureRootWrapper .valueWrapper {
     display: flex;
     flex-direction: row;
     justify-content: right;
@@ -72,23 +77,23 @@
     flex-wrap: nowrap;
 }
 
-.temperatureRootWrapper .unit {
+.MMM-Temperature .temperatureRootWrapper .unit {
     margin-left: 5px;
 }
 
-.temperatureRootWrapper .sensor .value {
+.MMM-Temperature .temperatureRootWrapper .sensor .value {
     min-width: 35px;
     text-align: right;
 }
 
-.temperatureRootWrapper .sensor .temperature.high .value, 
-.temperatureRootWrapper .sensor .temperature.high .unit, 
-.temperatureRootWrapper .sensor .humidity.high .value, 
-.temperatureRootWrapper .sensor .humidity.high .unit,
-.temperatureRootWrapper .sensor .temperature.low .value, 
-.temperatureRootWrapper .sensor .temperature.low .unit, 
-.temperatureRootWrapper .sensor .humidity.low .value, 
-.temperatureRootWrapper .sensor .humidity.low .unit
+.MMM-Temperature .temperatureRootWrapper .sensor .temperature.high .value, 
+.MMM-Temperature .temperatureRootWrapper .sensor .temperature.high .unit, 
+.MMM-Temperature .temperatureRootWrapper .sensor .humidity.high .value, 
+.MMM-Temperature .temperatureRootWrapper .sensor .humidity.high .unit,
+.MMM-Temperature .temperatureRootWrapper .sensor .temperature.low .value, 
+.MMM-Temperature .temperatureRootWrapper .sensor .temperature.low .unit, 
+.MMM-Temperature .temperatureRootWrapper .sensor .humidity.low .value, 
+.MMM-Temperature .temperatureRootWrapper .sensor .humidity.low .unit
 {
     color: red;
 }
