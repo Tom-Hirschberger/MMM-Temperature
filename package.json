@@ -1,10 +1,10 @@
 {
   "name": "MMM-Temperature",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "",
   "main": "MMM-Temperature",
   "dependencies": {
-    "child_process": "latest"
+    "json5": "latest"
   },
   "devDependencies": {},
   "scripts": {

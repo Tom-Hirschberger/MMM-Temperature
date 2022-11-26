@@ -51,6 +51,10 @@ Module.register('MMM-Temperature', {
     return ['temperature.css']
   },
 
+  // getScripts: function () {
+	// 	return [this.file('node_modules/json5/dist/index.min.js')];
+	// },
+
   getDom: function() {
     const self = this
     const wrapper = document.createElement('div')
