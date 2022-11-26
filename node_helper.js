@@ -9,6 +9,7 @@ const execSync = require('child_process').execSync
 const fs = require('fs')
 const path = require('path')
 const scriptsDir = path.join(__dirname, '/scripts')
+const json5 = require('json5')
 
 module.exports = NodeHelper.create({
 
@@ -282,7 +283,7 @@ module.exports = NodeHelper.create({
       self.sensorValuesUseCount[cur_conf_id] = 0
 
       try {
-        curValues = JSON.parse(payload)
+        curValues = json5.parse(payload)
 
         // console.log("Parsed values: ")
         // console.log(JSON.stringify(curValues))
