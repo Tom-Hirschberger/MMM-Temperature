@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+#Install Dependencies:
+#  cd ~
+#  sudo pip3 install --upgrade adafruit-python-shell
+#  wget https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/master/raspi-blinka.py
+#  sudo python3 raspi-blinka.py
+#  sudo pip3 install adafruit-circuitpython-sht31d
+#  
+
+import board
+import adafruit_sht31d
+import json
+
+i2c = board.I2C()
+h = adafruit_sht31d.SHT31D(i2c)
+
+result = {}
+try:    
+    result["temperature_c"] = h.temperature
+    result["humidity"] = h.relative_humidity
+    result["temperature_f"] = (result["temperature_c"]*1.8) + 32
+    result["error"] = False
+except:
+    result["temperature_c"] = 0.0
+    result["humidity"] = 0.0
+    result["temperature_f"] = (result["temperature_c"]*1.8) + 32
+    result["error"] = True
+
+print(json.dumps(result))
