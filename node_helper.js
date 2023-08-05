@@ -5,7 +5,7 @@
  * MIT Licensed.
  */
 const NodeHelper = require('node_helper')
-const execSync = require('child_process').execSync
+const spawnSync = require('child_process').spawnSync
 const fs = require('fs')
 const path = require('path')
 const scriptsDir = path.join(__dirname, '/scripts')
@@ -20,7 +20,7 @@ module.exports = NodeHelper.create({
     this.notificationSensors = {}
   },
 
-  updateSensorValues () {
+  updateSensorValues: function () {
     const self = this
     console.log(self.name+": Updating sensor values")
 
@@ -58,17 +58,32 @@ module.exports = NodeHelper.create({
           console.log(self.name+" Calling: "+curScript+" "+curArgs)
 
           let output = null
-          try{
-            if(typeof self.config.sensors[curSensorId].timeout !== "undefined"){
-              output = execSync(curScript+" "+curArgs, timeout=self.config.sensors[curSensorId].timeout)
-            } else {
-              output = execSync(curScript+" "+curArgs)
+          let options = {}
+
+          if(typeof self.config.sensors[curSensorId].timeout !== "undefined"){
+            options["timeout"] = self.config.sensors[curSensorId].timeout
+          }
+
+          try {
+            if (!Array.isArray(curArgs)){
+              curArgs = curArgs.split(" ")
             }
+
+            let spawnOutput = spawnSync(curScript, curArgs, options)
+            output = spawnOutput.stdout
+            errorOut = spawnOutput.stderr
           } catch (err){
+            console.log(err)
             output = null
+          }
+
+          if(errorOut != null){
+            console.log(self.name+" Error output of script "+curScript+":")
+            console.log(errorOut.toString())
           }
           
           if(output !== null){
+            output = output.toString().trim()
             try {
               curValues = JSON.parse(output)
               console.log(JSON.stringify(curValues))
