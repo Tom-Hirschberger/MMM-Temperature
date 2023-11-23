@@ -1,6 +1,6 @@
 /* global Module
 
-/* Magic Mirror
+/* MagicMirror²
  * Module: Temperature
  *
  * By Tom Hirschberger

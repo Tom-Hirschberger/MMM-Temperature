@@ -1,7 +1,7 @@
 {
   "name": "MMM-Temperature",
   "version": "0.0.8",
-  "description": "",
+  "description": "A MagicMirror² module to display temperature, humidity and more values of differnt types of sensor. The data can be provided by notifications, too.",
   "main": "MMM-Temperature",
   "dependencies": {
     "json5": "latest"
@@ -10,6 +10,18 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [
+    "MagicMirror",
+    "MM",
+    "temperature",
+    "humidity",
+    "dht11",
+    "dht22",
+    "bme280",
+    "ds28b20",
+    "htu21",
+    "sht31d"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:Tom-Hirschberger/MMM-Temperature.git"
