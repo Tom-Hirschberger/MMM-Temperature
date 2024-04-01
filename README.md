@@ -4,7 +4,7 @@ This module reads temperature of different sensors (default HTU21D) with externa
 :warning: **You may want to use [MMM-ValuesByNotification](https://github.com/Tom-Hirschberger/MMM-ValuesByNotification) instead of this module and [MMM-CommandToNotification](https://github.com/Tom-Hirschberger/MMM-CommandToNotification) to deliver the data of sensor.  
 I will provide bugfixes for this module but there will be no new features!**
 
-The new modules provide a lot of flexabilty but my be hard to configure in the first moment.
+The new modules provide a lot of flexabilty but may be hard to configure in the first moment.
 
 
 ## Screenshots ##
