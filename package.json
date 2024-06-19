@@ -1,6 +1,6 @@
 {
   "name": "MMM-Temperature",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "A MagicMirror² module to display temperature, humidity and more values of differnt types of sensor. The data can be provided by notifications, too.",
   "main": "MMM-Temperature",
   "dependencies": {
