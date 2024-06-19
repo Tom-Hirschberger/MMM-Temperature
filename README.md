@@ -252,6 +252,32 @@ If your sensor uses an different address you can specify it as an commandline op
 
 ```
 
+### SHTC3 ###
+
+You will need to install Pythons `smbus2` lib to get this script running:
+
+```bash
+pip install smbus2
+```
+
+The script expects the sensor to have the address `0x70` and provides NO options.
+
+```json5
+		{
+			module: "MMM-Temperature",
+			position: "bottom_right",
+			config: {
+				sensors: [
+					{
+					    name: "Sensor One",
+					    script: "shtc3",
+					},
+				]
+			},
+		},
+
+```
+
 ### DS18B20 ###
 ```json5
 
