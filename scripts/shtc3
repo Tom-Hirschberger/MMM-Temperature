@@ -1,0 +1,130 @@
+#!/usr/bin/env python3
+from __future__ import print_function
+import time
+import json
+from contextlib import contextmanager
+from smbus2 import SMBus, i2c_msg
+
+
+class SHTC3:
+    def __init__(self, bus, addr=0x70):
+        self.bus = bus
+        self.addr = addr
+
+    def sleep(self):
+        self._send_cmd(0xB098)
+
+    def wake(self):
+        self._send_cmd(0x3517)
+
+    def reset(self):
+        self._send_cmd(0x805d)
+
+    def id(self):
+        return self._send_cmd(0xefc8, 3)
+
+    def measure(self, wait=0.05, **kw):
+        if not callable(wait):
+            wait = lambda td=wait: time.sleep(td)
+
+        for ans in self.iter_measure(**kw):
+            if ans is not None:
+                return ans
+            wait()
+
+    def iter_measure(self, **kw):
+        for raw in self._iter_raw_measure(**kw):
+            if raw is not None:
+                yield self._as_reading(raw)
+            else: yield None
+
+
+    def _as_reading(self, raw) :
+
+        h = round(raw['h'] / 655.35, 6) # Kommastelle von 65535. nach 655.35 verrückt
+        temp_raw = round(raw['t'] / 65535., 6)
+        return dict(temperature_c=self._temp_c(temp_raw), # t_c zu temperature_c geändert
+	    humidity=h, # h zu humidity geändert
+            temperature_f=self._temp_f(temp_raw), # t_f zu temperature_c geändert
+            error=bool(False)) # Ohne Funktion, nur weil MMM-Temperature die Ausgabe erwartet
+#            t_r=temp_raw)
+
+    def _temp_f(self, temp_raw):
+        return round(-49 + 315 * temp_raw, 2)
+
+    def _temp_c(self, temp_raw):
+        return round(-45 + 175 * temp_raw, 2)
+
+
+    _measure_cmd = {
+        ('normal', 'clock', 'th'):  0x7CA2,
+        ('normal', 'clock', 'ht'):  0x5C24,
+        ('normal', 'poll', 'th'): 0x7866,
+        ('normal', 'poll', 'ht'): 0x58E0,
+
+        ('low', 'clock', 'th'):  0x6458,
+        ('low', 'clock', 'ht'):  0x44DE,
+        ('low', 'poll', 'th'): 0x609C,
+        ('low', 'poll', 'ht'): 0x401A,
+    }
+
+    def _iter_raw_measure(self, low_power=False, clock=False, humdity_first=False):
+        cmd = self._measure_cmd[
+            "low" if low_power else "normal",
+            "clock" if clock else "poll",
+            "ht" if humdity_first else "th"]
+
+        self._send_cmd(cmd)
+
+        reading = None
+        while reading is None:
+            reading = self._raw_reading(humdity_first)
+            yield reading
+
+    def _raw_reading(self, humdity_first):
+        raw = i2c_msg.read(self.addr, 6)
+        try: self.bus.i2c_rdwr(raw)
+        except IOError:
+            return None
+
+        if humdity_first:
+            [h_hi, h_low, h_crc, t_hi, t_low, t_crc] = raw
+        else:
+            [t_hi, t_low, t_crc, h_hi, h_low, h_crc] = raw
+
+        t = (t_hi << 8) | t_low
+        h = (h_hi << 8) | h_low
+        return dict(t=t, h=h, t_crc=t_crc, h_crc=h_crc)
+
+
+    def _send_cmd(self, cmd, len_read=None):
+        c0 = (cmd >> 8) & 0xff
+        c1 = (cmd >> 0) & 0xff
+        mc = i2c_msg.write(self.addr, [c0,c1])
+
+        if len_read is None:
+            return self.bus.i2c_rdwr(mc)
+        else:
+            mr = i2c_msg.read(self.addr, len_read)
+            self.bus.i2c_rdwr(mc, mr)
+            return list(mr)
+
+    @classmethod
+    @contextmanager
+    def with_bus_addr(klass, bus_id=0x01, addr=0x70):
+        with SMBus(bus_id) as bus:
+            yield klass(bus, addr)
+
+with SHTC3.with_bus_addr() as sensor:
+    sensor.wake()
+    try:
+        sensor.wake()
+        reading = sensor.measure(clock=False)
+        sensor.sleep()
+    except:
+        reading = {"error": True}
+
+    if reading is None:
+        reading = {"error": True}
+
+    print(json.dumps(reading))
