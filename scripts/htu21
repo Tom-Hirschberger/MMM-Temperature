@@ -1,20 +1,16 @@
 #!/usr/bin/env python3
-#Install Dependencies:
-#  cd ~
-#  git clone https://github.com/mgaggero/Adafruit_Python_HTU21D.git
-#  cd Adafruit_Python_HTU21D
-#  sudo pip3 install .
-#  cd ..
-#  rm -rf Adafruit_Python_HTU21D
-
-from Adafruit_HTU21D.HTU21D import HTU21D
+#pip3 install adafruit-circuitpython-htu21d
+import board
+from adafruit_htu21d import HTU21D
 import json
 
 result = {}
-try: 
-    h = HTU21D()
-    result["temperature_c"] = h.read_temperature()
-    result["humidity"] = h.read_humidity()
+try:
+    # Create sensor object, communicating over the board's default I2C bus
+    i2c = board.I2C()  # uses board.SCL and board.SDA
+    sensor = HTU21D(i2c)
+    result["temperature_c"] = sensor.temperature
+    result["humidity"] = sensor.relative_humidity
     result["temperature_f"] = (result["temperature_c"]*1.8) + 32
     result["error"] = False
 except:
@@ -24,8 +20,3 @@ except:
     result["error"] = True
 
 print(json.dumps(result))
-
-try:
-    h.reset()
-except:
-    pass

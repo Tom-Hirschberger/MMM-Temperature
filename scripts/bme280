@@ -156,10 +156,12 @@ try:
     result["temperature_c"] = temperature
     result["humidity"] = humidity
     result["temperature_f"] = (result["temperature_c"]*1.8) + 32
+    result["pressure"] = pressure
     result["error"] = False
 except:
     result["temperature_c"] = 0.0
     result["humidity"] = 0.0
+    result["pressure"] = 0.0
     result["temperature_f"] = (result["temperature_c"]*1.8) + 32
     result["error"] = True
 
